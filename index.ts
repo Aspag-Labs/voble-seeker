@@ -1,8 +1,11 @@
-import { registerRootComponent } from 'expo';
+// Polyfills must be first — each in its own module so side effects run in import order
+import 'react-native-get-random-values';
+import './src/polyfills/buffer';
+import { installCryptoSubtlePolyfill } from './src/polyfills/crypto-subtle';
+installCryptoSubtlePolyfill();
 
+// App entry point
+import { registerRootComponent } from 'expo';
 import App from './App';
 
-// registerRootComponent calls AppRegistry.registerComponent('main', () => App);
-// It also ensures that whether you load the app in Expo Go or in a native build,
-// the environment is set up appropriately
 registerRootComponent(App);
