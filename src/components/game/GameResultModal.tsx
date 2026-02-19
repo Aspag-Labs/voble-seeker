@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Text, Modal, Pressable, Share, Linking, useColorScheme } from 'react-native';
-import { X, Share2, RotateCcw } from 'lucide-react-native';
+import { X, Share2, RotateCcw, Trophy } from 'lucide-react-native';
 
 interface GameResultModalProps {
     visible: boolean;
     onClose: () => void;
+    onViewLeaderboard?: () => void;
     gameStatus: 'won' | 'lost';
     targetWord: string;
     guessesUsed: number;
@@ -22,6 +23,7 @@ const formatTime = (ms: number) => {
 export function GameResultModal({
     visible,
     onClose,
+    onViewLeaderboard,
     gameStatus,
     targetWord,
     guessesUsed,
@@ -153,6 +155,17 @@ export function GameResultModal({
                                 </Text>
                             </Pressable>
                         </View>
+
+                        {/* Leaderboard Button */}
+                        {onViewLeaderboard && (
+                            <Pressable
+                                onPress={onViewLeaderboard}
+                                className="py-3.5 rounded-xl flex-row items-center justify-center bg-amber-500 active:bg-amber-600"
+                            >
+                                <Trophy size={18} color="#fff" />
+                                <Text className="ml-2 font-bold text-white">Leaderboard</Text>
+                            </Pressable>
+                        )}
 
                         {/* Done Button */}
                         <Pressable

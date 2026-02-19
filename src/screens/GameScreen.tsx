@@ -1,5 +1,6 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { View, Text, SafeAreaView, Pressable, ActivityIndicator, useColorScheme } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { Wallet } from 'lucide-react-native';
 
 import { GameGrid, Keyboard, GameHeader } from '../components/game';
@@ -37,6 +38,7 @@ const createEmptyGrid = (): TileData[][] =>
 export default function GameScreen() {
     const colorScheme = useColorScheme();
     const isDark = colorScheme === 'dark';
+    const navigation = useNavigation<any>();
     const { connected, connecting, connect, address: walletAddress } = useWallet();
 
     const periodIds = getCurrentPeriodIds();
@@ -434,6 +436,10 @@ export default function GameScreen() {
                 <GameResultModal
                     visible={true}
                     onClose={() => setPhase('idle')}
+                    onViewLeaderboard={() => {
+                        setPhase('idle');
+                        navigation.navigate('Leaderboard');
+                    }}
                     gameStatus={session.isSolved ? 'won' : 'lost'}
                     targetWord={session.targetWord || '??????'}
                     guessesUsed={session.guessesUsed}

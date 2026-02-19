@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { View, Text, ScrollView, Pressable, RefreshControl, SafeAreaView, Alert, ActivityIndicator, useColorScheme } from 'react-native';
 import { Wallet, Award, ChevronRight, Copy, Check, LogOut, BarChart3, UserPlus, Info, Trash2 } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
@@ -9,6 +9,7 @@ import { useGameHistory } from '../hooks/use-game-history';
 import { usePlayerRank } from '../hooks/use-player-rank';
 import { useTradeActivityPoints } from '../hooks/use-trade-activity-points';
 import { useCloseAccounts } from '../hooks/use-close-accounts';
+import { useClaim, type UnclaimedPrize, type UnclaimedRaffle } from '../hooks/use-claim';
 
 import { StatsOverview } from '../components/profile/StatsOverview';
 import { GuessDistribution } from '../components/profile/GuessDistribution';
@@ -29,6 +30,81 @@ export default function ProfileScreen({ navigation }: any) {
     const { data: rankData, refetch: refetchRank } = usePlayerRank();
     const { tradePoints, isTrading, isTradingEnabled } = useTradeActivityPoints();
     const { closePermissions, isClosing } = useCloseAccounts();
+    const {
+        claimPrize,
+        claimLuckyDraw,
+        getAllUnclaimedPrizes,
+        getAllUnclaimedRaffles,
+        isClaimingPrize,
+        isClaimingLuckyDraw: isClaimingRaffle,
+    } = useClaim();
+
+    // Prize discovery state
+    const [claimablePrizes, setClaimablePrizes] = useState<UnclaimedPrize[]>([]);
+    const [hasCheckedPrize, setHasCheckedPrize] = useState(false);
+    const [rafflePrizes, setRafflePrizes] = useState<UnclaimedRaffle[]>([]);
+    const [hasCheckedRaffle, setHasCheckedRaffle] = useState(false);
+
+    // Check for unclaimed leaderboard prizes (blockchain-based)
+    useEffect(() => {
+        let cancelled = false;
+        const run = async () => {
+            if (!address) return;
+            try {
+                const prizes = await getAllUnclaimedPrizes();
+                if (cancelled) return;
+                setClaimablePrizes(prizes);
+                setHasCheckedPrize(true);
+            } catch (err) {
+                console.error('Error checking prizes:', err);
+                if (!cancelled) setHasCheckedPrize(true);
+            }
+        };
+        run();
+        return () => { cancelled = true; };
+    }, [getAllUnclaimedPrizes, address]);
+
+    // Check for unclaimed raffle prizes (blockchain-based + API)
+    useEffect(() => {
+        let cancelled = false;
+        const run = async () => {
+            if (!address) return;
+            try {
+                const raffles = await getAllUnclaimedRaffles();
+                if (cancelled) return;
+                setRafflePrizes(raffles);
+                setHasCheckedRaffle(true);
+            } catch (err) {
+                console.error('Error checking raffle prizes:', err);
+                if (!cancelled) setHasCheckedRaffle(true);
+            }
+        };
+        run();
+        return () => { cancelled = true; };
+    }, [getAllUnclaimedRaffles, address]);
+
+    // Claim handlers
+    const handleClaimPrize = async (prize: UnclaimedPrize) => {
+        const result = await claimPrize(prize.periodType, prize.periodId);
+        if (result.success) {
+            setClaimablePrizes((prev) => prev.filter((p) => p.address !== prize.address));
+            Alert.alert('Success', 'Prize claimed successfully!');
+            await refetchProfile();
+        } else if (result.error) {
+            Alert.alert('Claim Failed', result.error);
+        }
+    };
+
+    const handleClaimRafflePrize = async (raffle: UnclaimedRaffle) => {
+        const result = await claimLuckyDraw(raffle.periodId);
+        if (result.success) {
+            setRafflePrizes((prev) => prev.filter((r) => r.address !== raffle.address));
+            Alert.alert('Success', 'Raffle prize claimed successfully!');
+            await refetchProfile();
+        } else if (result.error) {
+            Alert.alert('Claim Failed', result.error);
+        }
+    };
 
     const winRate = useMemo(() => {
         if (!profile || profile.totalGamesPlayed === 0) return 0;
@@ -259,6 +335,14 @@ export default function ProfileScreen({ navigation }: any) {
                         <PrizeCenter
                             totalPrizeWinnings={profile?.totalPrizeWinnings || 0n}
                             totalLuckyDrawWinnings={profile?.totalLuckyDrawWinnings || 0n}
+                            claimablePrizes={claimablePrizes}
+                            rafflePrizes={rafflePrizes}
+                            hasCheckedPrize={hasCheckedPrize}
+                            hasCheckedRaffle={hasCheckedRaffle}
+                            isClaimingPrize={isClaimingPrize}
+                            isClaimingRaffle={isClaimingRaffle}
+                            onClaimPrize={handleClaimPrize}
+                            onClaimRafflePrize={handleClaimRafflePrize}
                         />
                     </View>
 

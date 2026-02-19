@@ -24,6 +24,8 @@ import {
     getClaimLuckyDrawPrizeInstructionAsync,
     fetchMaybeLuckyDrawState,
     VOBLE_PROGRAM_ADDRESS,
+    getWinnerEntitlementDecoder,
+    getLuckyDrawStateDecoder,
 } from '../generated';
 import { getWinnerEntitlementPDA, getLuckyDrawStatePDA } from './pdas';
 import { createRpc } from './utils';
@@ -37,6 +39,21 @@ export interface ClaimResult {
     success: boolean;
     signature?: string;
     error?: string;
+}
+
+export interface UnclaimedPrize {
+    periodType: PrizePeriodType;
+    periodId: string;
+    amount: number;
+    rank: number;
+    address: Address;
+}
+
+export interface UnclaimedRaffle {
+    periodId: string;
+    amount: number;
+    winningIndex: number;
+    address: Address;
 }
 
 export function useClaim() {
@@ -214,11 +231,137 @@ export function useClaim() {
         [connected, walletAddress, connection, signTransaction],
     );
 
+    // --- BLOCKCHAIN-BASED PRIZE DISCOVERY ---
+
+    const getAllUnclaimedPrizes = useCallback(async (): Promise<UnclaimedPrize[]> => {
+        if (!connected || !walletAddress) return [];
+
+        try {
+            const playerAddress = address(walletAddress);
+            const rpc = createRpc();
+
+            const response = await rpc
+                .getProgramAccounts(VOBLE_PROGRAM_ADDRESS, {
+                    encoding: 'base64',
+                    filters: [{ memcmp: { offset: 8n, bytes: playerAddress as any, encoding: 'base58' } }],
+                })
+                .send();
+
+            const decoder = getWinnerEntitlementDecoder();
+            const unclaimed: UnclaimedPrize[] = [];
+
+            for (const account of response as any[]) {
+                try {
+                    let dataBytes: Uint8Array;
+                    if (Array.isArray(account.account.data)) {
+                        dataBytes = new Uint8Array(Buffer.from(account.account.data[0], 'base64'));
+                    } else if (account.account.data instanceof Uint8Array) {
+                        dataBytes = account.account.data;
+                    } else {
+                        continue;
+                    }
+
+                    const entitlement = decoder.decode(dataBytes);
+
+                    if (!entitlement.claimed && entitlement.amount > 0n) {
+                        let periodType: PrizePeriodType = 'daily';
+                        const pt = entitlement.periodType as any;
+                        if (pt?.Weekly !== undefined || pt === 'Weekly' || pt === 1) periodType = 'weekly';
+                        else if (pt?.Monthly !== undefined || pt === 'Monthly' || pt === 2) periodType = 'monthly';
+
+                        unclaimed.push({
+                            periodType,
+                            periodId: entitlement.periodId,
+                            amount: Number(entitlement.amount),
+                            rank: entitlement.rank,
+                            address: account.pubkey,
+                        });
+                    }
+                } catch (decodeErr) {
+                    console.warn('[getAllUnclaimedPrizes] Failed to decode account:', account.pubkey, decodeErr);
+                }
+            }
+
+            console.log('[getAllUnclaimedPrizes] Found', unclaimed.length, 'unclaimed prizes');
+            return unclaimed;
+        } catch (err: any) {
+            console.error('[getAllUnclaimedPrizes] Error:', err);
+            return [];
+        }
+    }, [connected, walletAddress]);
+
+    const getAllUnclaimedRaffles = useCallback(async (): Promise<UnclaimedRaffle[]> => {
+        if (!connected || !walletAddress) return [];
+
+        try {
+            const rpc = createRpc();
+
+            const response = await rpc
+                .getProgramAccounts(VOBLE_PROGRAM_ADDRESS, {
+                    encoding: 'base64',
+                })
+                .send();
+
+            const decoder = getLuckyDrawStateDecoder();
+            const unclaimed: UnclaimedRaffle[] = [];
+
+            for (const account of response as any[]) {
+                try {
+                    let dataBytes: Uint8Array;
+                    if (Array.isArray(account.account.data)) {
+                        dataBytes = new Uint8Array(Buffer.from(account.account.data[0], 'base64'));
+                    } else if (account.account.data instanceof Uint8Array) {
+                        dataBytes = account.account.data;
+                    } else {
+                        continue;
+                    }
+
+                    if (dataBytes.length !== 55) continue;
+
+                    const state = decoder.decode(dataBytes);
+
+                    if (!state.isClaimed && !state.isPending && state.amount > 0n) {
+                        const periodIdBytes = state.periodId as unknown as Uint8Array;
+                        const periodId = new TextDecoder().decode(periodIdBytes).replace(/\0/g, '').trim();
+
+                        if (!periodId) continue;
+
+                        try {
+                            const proofResponse = await fetch(
+                                `https://voble.fun/api/lucky-draw?periodId=${encodeURIComponent(periodId)}&wallet=${walletAddress}`,
+                            );
+                            if (proofResponse.ok) {
+                                unclaimed.push({
+                                    periodId,
+                                    amount: Number(state.amount),
+                                    winningIndex: state.winningIndex,
+                                    address: account.pubkey,
+                                });
+                            }
+                        } catch {
+                            // Player is not the winner for this raffle
+                        }
+                    }
+                } catch {
+                    // Skip accounts that aren't LuckyDrawState
+                }
+            }
+
+            console.log('[getAllUnclaimedRaffles] Found', unclaimed.length, 'unclaimed raffles');
+            return unclaimed;
+        } catch (err: any) {
+            console.error('[getAllUnclaimedRaffles] Error:', err);
+            return [];
+        }
+    }, [connected, walletAddress]);
+
     return {
         claimPrize,
         claimLuckyDraw,
         isClaimingPrize,
         isClaimingLuckyDraw,
+        getAllUnclaimedPrizes,
+        getAllUnclaimedRaffles,
         error,
     };
 }
