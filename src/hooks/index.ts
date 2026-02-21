@@ -46,6 +46,9 @@ export { useGameMachine } from './use-game-machine';
 export type { GamePhase, UseGameMachineReturn } from './use-game-machine';
 
 // Session hooks
+export { useInitializeSession } from './use-initialize-session';
+export type { InitializeSessionResult } from './use-initialize-session';
+
 export { useFetchSession } from './use-fetch-session';
 export type { SessionData, GuessDataParsed, FetchSessionResult } from './use-fetch-session';
 

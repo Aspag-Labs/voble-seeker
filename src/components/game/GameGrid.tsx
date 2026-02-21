@@ -24,18 +24,18 @@ const getTileStyle = (state: TileState, isCurrentRow: boolean, isDark: boolean) 
 
     switch (state) {
         case 'correct':
-            return `${baseStyle} bg-emerald-500`;
+            return `${baseStyle} bg-[#14F195]`;
         case 'present':
-            return `${baseStyle} bg-amber-500`;
+            return `${baseStyle} bg-[#9945FF]`;
         case 'absent':
-            return `${baseStyle} ${isDark ? 'bg-slate-600' : 'bg-slate-400'}`;
+            return `${baseStyle} bg-gray-500`;
         case 'filled':
-            return `${baseStyle} ${isDark ? 'bg-slate-700 border-2 border-indigo-400' : 'bg-white border-2 border-indigo-400'}`;
+            return `${baseStyle} ${isDark ? 'bg-slate-700 border-2 border-slate-600' : 'bg-white border-2 border-slate-300'}`;
         default:
             if (isCurrentRow) {
-                return `${baseStyle} ${isDark ? 'bg-slate-800 border-2 border-slate-500' : 'bg-slate-100 border-2 border-slate-300'}`;
+                return `${baseStyle} ${isDark ? 'bg-slate-800 border-2 border-slate-500' : 'bg-white border-2 border-slate-300'}`;
             }
-            return `${baseStyle} ${isDark ? 'bg-slate-800 border border-slate-600' : 'bg-slate-100 border border-slate-200'}`;
+            return `${baseStyle} ${isDark ? 'bg-slate-800 border-2 border-slate-700' : 'bg-white border-2 border-slate-200'}`;
     }
 };
 
@@ -81,22 +81,24 @@ export function GameGrid({ grid, currentRow, currentCol }: GameGridProps) {
 
     return (
         <View className="items-center px-5 py-6">
-            {grid.map((row, rowIndex) => (
-                <View
-                    key={rowIndex}
-                    className="flex-row mb-1.5"
-                >
-                    {row.map((tile, colIndex) => (
-                        <Tile
-                            key={`${rowIndex}-${colIndex}`}
-                            letter={tile.letter}
-                            state={tile.state}
-                            isCurrentRow={rowIndex === currentRow}
-                            isDark={isDark}
-                        />
-                    ))}
-                </View>
-            ))}
+            <View className={`p-4 rounded-2xl ${isDark ? 'bg-zinc-800/50 border border-zinc-800' : 'bg-zinc-100 border border-zinc-200'}`}>
+                {grid.map((row, rowIndex) => (
+                    <View
+                        key={rowIndex}
+                        className="flex-row mb-1.5"
+                    >
+                        {row.map((tile, colIndex) => (
+                            <Tile
+                                key={`${rowIndex}-${colIndex}`}
+                                letter={tile.letter}
+                                state={tile.state}
+                                isCurrentRow={rowIndex === currentRow}
+                                isDark={isDark}
+                            />
+                        ))}
+                    </View>
+                ))}
+            </View>
         </View>
     );
 }

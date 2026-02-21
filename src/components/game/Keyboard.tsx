@@ -23,13 +23,13 @@ interface KeyboardProps {
 const getKeyStyle = (state: KeyState, isDark: boolean) => {
     switch (state) {
         case 'correct':
-            return 'bg-emerald-500';
+            return 'bg-[#14F195]';
         case 'present':
-            return 'bg-amber-500';
+            return 'bg-[#9945FF]';
         case 'absent':
-            return isDark ? 'bg-slate-600' : 'bg-slate-400';
+            return 'bg-gray-500';
         default:
-            return isDark ? 'bg-slate-700' : 'bg-slate-200';
+            return isDark ? 'bg-slate-700 border border-slate-600' : 'bg-slate-200 border border-slate-300';
     }
 };
 

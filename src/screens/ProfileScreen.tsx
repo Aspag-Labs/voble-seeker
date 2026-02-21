@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { View, Text, ScrollView, Pressable, RefreshControl, SafeAreaView, Alert, ActivityIndicator, useColorScheme } from 'react-native';
-import { Wallet, Award, ChevronRight, Copy, Check, LogOut, BarChart3, UserPlus, Info, Trash2 } from 'lucide-react-native';
+import { Wallet, Award, ChevronRight, Copy, Check, LogOut, BarChart3, UserPlus, Trash2 } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 
 import { useWallet } from '../providers';
@@ -177,9 +177,9 @@ export default function ProfileScreen({ navigation }: any) {
     // Not connected
     if (!connected) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
                 <View className="flex-1 items-center justify-center px-8">
-                    <View className={`w-20 h-20 rounded-full items-center justify-center mb-6 ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`}>
+                    <View className={`w-20 h-20 rounded-full items-center justify-center mb-6 ${isDark ? 'bg-[#0f0f10]' : 'bg-slate-100'}`}>
                         <Wallet size={40} color={isDark ? '#64748b' : '#94a3b8'} />
                     </View>
                     <Text className={`text-2xl font-bold mb-2 text-center ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
@@ -191,9 +191,9 @@ export default function ProfileScreen({ navigation }: any) {
                     <Pressable
                         onPress={handleConnect}
                         disabled={connecting}
-                        className={`bg-indigo-600 px-8 py-4 rounded-2xl w-full ${connecting ? 'opacity-50' : 'active:bg-indigo-700'}`}
+                        className={`bg-[#1877F2] px-8 py-4 rounded-2xl w-full ${connecting ? 'opacity-50' : 'active:opacity-90'}`}
                         style={{
-                            shadowColor: '#4f46e5',
+                            shadowColor: '#1877F2',
                             shadowOffset: { width: 0, height: 4 },
                             shadowOpacity: 0.3,
                             shadowRadius: 8,
@@ -217,7 +217,7 @@ export default function ProfileScreen({ navigation }: any) {
     // Loading profile
     if (profileLoading) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
                 <View className="flex-1 items-center justify-center">
                     <ActivityIndicator size="large" color={isDark ? '#818cf8' : '#6366f1'} />
                     <Text className={`mt-3 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Loading profile...</Text>
@@ -229,7 +229,7 @@ export default function ProfileScreen({ navigation }: any) {
     // No profile
     if (!profileExists) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
                 <View className="flex-1 items-center justify-center px-8">
                     <View className={`w-20 h-20 rounded-full items-center justify-center mb-6 ${isDark ? 'bg-indigo-900/40' : 'bg-indigo-100'}`}>
                         <Award size={40} color={isDark ? '#818cf8' : '#6366f1'} />
@@ -246,7 +246,7 @@ export default function ProfileScreen({ navigation }: any) {
     }
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             <ScrollView
                 className="flex-1"
                 refreshControl={
@@ -254,7 +254,7 @@ export default function ProfileScreen({ navigation }: any) {
                 }
             >
                 {/* Profile Header */}
-                <View className={`px-4 py-6 ${isDark ? 'bg-slate-800 border-b border-slate-700' : 'bg-white border-b border-slate-100'}`}>
+                <View className={`px-4 py-6 ${isDark ? 'bg-[#0f0f10] border-b border-zinc-800' : 'bg-white border-b border-zinc-200'}`}>
                     <View className="flex-row items-center">
                         <View className="w-16 h-16 bg-indigo-500 rounded-2xl items-center justify-center mr-4">
                             <Text className="text-white text-2xl font-bold">
@@ -355,10 +355,10 @@ export default function ProfileScreen({ navigation }: any) {
                     </View>
 
                     {/* Menu Items */}
-                    <View className={`mt-3 rounded-2xl overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
+                    <View className={`mt-3 rounded-2xl overflow-hidden ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
                         <Pressable
                             onPress={() => navigation.navigate('Stats')}
-                            className={`flex-row items-center px-4 py-3.5 ${isDark ? 'active:bg-slate-700 border-b border-slate-700' : 'active:bg-slate-50 border-b border-slate-100'}`}
+                            className={`flex-row items-center px-4 py-3.5 ${isDark ? 'active:bg-zinc-800 border-b border-zinc-800' : 'active:bg-slate-50 border-b border-zinc-200'}`}
                         >
                             <View className={`w-8 h-8 rounded-full items-center justify-center mr-3 ${isDark ? 'bg-blue-900/30' : 'bg-blue-50'}`}>
                                 <BarChart3 size={16} color="#3b82f6" />
@@ -369,7 +369,7 @@ export default function ProfileScreen({ navigation }: any) {
 
                         <Pressable
                             onPress={() => navigation.navigate('Referral')}
-                            className={`flex-row items-center px-4 py-3.5 ${isDark ? 'active:bg-slate-700 border-b border-slate-700' : 'active:bg-slate-50 border-b border-slate-100'}`}
+                            className={`flex-row items-center px-4 py-3.5 ${isDark ? 'active:bg-zinc-800 border-b border-zinc-800' : 'active:bg-slate-50 border-b border-zinc-200'}`}
                         >
                             <View className={`w-8 h-8 rounded-full items-center justify-center mr-3 ${isDark ? 'bg-emerald-900/30' : 'bg-emerald-50'}`}>
                                 <UserPlus size={16} color="#10b981" />
@@ -402,7 +402,7 @@ export default function ProfileScreen({ navigation }: any) {
                                 );
                             }}
                             disabled={isClosing}
-                            className={`flex-row items-center px-4 py-3.5 ${isDark ? 'active:bg-slate-700 border-b border-slate-700' : 'active:bg-slate-50 border-b border-slate-100'} ${isClosing ? 'opacity-50' : ''}`}
+                            className={`flex-row items-center px-4 py-3.5 ${isDark ? 'active:bg-zinc-800' : 'active:bg-slate-50'} ${isClosing ? 'opacity-50' : ''}`}
                         >
                             <View className={`w-8 h-8 rounded-full items-center justify-center mr-3 ${isDark ? 'bg-red-900/30' : 'bg-red-50'}`}>
                                 {isClosing ? (
@@ -412,17 +412,6 @@ export default function ProfileScreen({ navigation }: any) {
                                 )}
                             </View>
                             <Text className={`flex-1 font-medium ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>Close Accounts</Text>
-                            <ChevronRight size={18} color={isDark ? '#64748b' : '#94a3b8'} />
-                        </Pressable>
-
-                        <Pressable
-                            onPress={() => navigation.navigate('About')}
-                            className={`flex-row items-center px-4 py-3.5 ${isDark ? 'active:bg-slate-700' : 'active:bg-slate-50'}`}
-                        >
-                            <View className={`w-8 h-8 rounded-full items-center justify-center mr-3 ${isDark ? 'bg-indigo-900/30' : 'bg-indigo-50'}`}>
-                                <Info size={16} color={isDark ? '#818cf8' : '#6366f1'} />
-                            </View>
-                            <Text className={`flex-1 font-medium ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>About Voble</Text>
                             <ChevronRight size={18} color={isDark ? '#64748b' : '#94a3b8'} />
                         </Pressable>
                     </View>

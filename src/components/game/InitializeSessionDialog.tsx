@@ -23,7 +23,7 @@ export function InitializeSessionDialog({
     return (
         <Modal visible={visible} transparent animationType="fade">
             <View className="flex-1 items-center justify-center bg-black/60 px-6">
-                <View className={`w-full max-w-sm rounded-3xl p-6 ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
+                <View className={`w-full max-w-sm rounded-3xl p-6 ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
                     {/* Logo */}
                     <View className="items-center mb-5">
                         <Image
@@ -94,9 +94,9 @@ export function InitializeSessionDialog({
 
                     {/* Cost Info */}
                     {isAuthenticated && !isSessionCreated && (
-                        <View className={`flex-row items-center rounded-xl p-3 mb-4 ${isDark ? 'bg-indigo-900/30' : 'bg-indigo-50'}`}>
-                            <Shield size={14} color={isDark ? '#818cf8' : '#6366f1'} />
-                            <Text className={`ml-2 text-xs flex-1 ${isDark ? 'text-indigo-300' : 'text-indigo-700'}`}>
+                        <View className={`flex-row items-center rounded-xl p-3 mb-4 ${isDark ? 'bg-zinc-800/50' : 'bg-zinc-100'}`}>
+                            <Shield size={14} color={isDark ? '#a1a1aa' : '#71717a'} />
+                            <Text className={`ml-2 text-xs flex-1 ${isDark ? 'text-zinc-300' : 'text-zinc-700'}`}>
                                 ~0.028 SOL one-time fee (refundable). This creates your game session account on Solana.
                             </Text>
                         </View>
@@ -109,8 +109,8 @@ export function InitializeSessionDialog({
                             disabled={isInitializing}
                             className={`py-3.5 rounded-xl items-center ${
                                 isInitializing
-                                    ? isDark ? 'bg-indigo-800' : 'bg-indigo-400'
-                                    : 'bg-indigo-600 active:bg-indigo-700'
+                                    ? 'bg-[#1877F2]/60'
+                                    : 'bg-[#1877F2] active:opacity-90'
                             }`}
                         >
                             {isInitializing ? (

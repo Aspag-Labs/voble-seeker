@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, ScrollView, Pressable, RefreshControl, SafeAreaView, useColorScheme } from 'react-native';
 import { Users, Clock, Crown, Medal, RefreshCw } from 'lucide-react-native';
 import { useLeaderboard, useVaultBalances, PeriodType } from '../hooks';
+import { useWallet } from '../providers';
 
 // Tiered winner counts per period
 const WINNER_COUNTS: Record<PeriodType, number> = {
@@ -29,6 +30,7 @@ const formatDuration = (ms: number) => {
 export default function LeaderboardScreen() {
     const colorScheme = useColorScheme();
     const isDark = colorScheme === 'dark';
+    const { address: currentUserAddress } = useWallet();
     const [activePeriod, setActivePeriod] = useState<PeriodType>('daily');
     const [timeLeft, setTimeLeft] = useState('');
 
@@ -51,23 +53,25 @@ export default function LeaderboardScreen() {
     useEffect(() => {
         const calculateTimeLeft = () => {
             const now = new Date();
-            const targetDate = new Date(now);
+            const utc8TimeStr = now.toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
+            const nowUtc8 = new Date(utc8TimeStr);
+            const targetDate = new Date(nowUtc8);
 
             if (activePeriod === 'daily') {
-                targetDate.setDate(now.getDate() + 1);
+                targetDate.setDate(nowUtc8.getDate() + 1);
                 targetDate.setHours(0, 0, 0, 0);
             } else if (activePeriod === 'weekly') {
-                const day = now.getDay();
+                const day = nowUtc8.getDay();
                 const daysUntilMonday = (8 - day) % 7 || 7;
-                targetDate.setDate(now.getDate() + daysUntilMonday);
+                targetDate.setDate(nowUtc8.getDate() + daysUntilMonday);
                 targetDate.setHours(0, 0, 0, 0);
             } else {
-                targetDate.setMonth(now.getMonth() + 1);
+                targetDate.setMonth(nowUtc8.getMonth() + 1);
                 targetDate.setDate(1);
                 targetDate.setHours(0, 0, 0, 0);
             }
 
-            const diff = targetDate.getTime() - now.getTime();
+            const diff = targetDate.getTime() - nowUtc8.getTime();
             if (diff <= 0) return 'Soon...';
 
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -123,9 +127,9 @@ export default function LeaderboardScreen() {
     };
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             {/* Header */}
-            <View className={`px-4 py-4 ${isDark ? 'bg-slate-800 border-b border-slate-700' : 'bg-white border-b border-slate-100'}`}>
+            <View className={`px-4 py-4 ${isDark ? 'bg-[#09090b] border-b border-zinc-800' : 'bg-white border-b border-zinc-200'}`}>
                 {/* Period Tabs */}
                 <View className="flex-row justify-center mb-4">
                     {(['daily', 'weekly', 'monthly'] as PeriodType[]).map((period) => (
@@ -133,14 +137,14 @@ export default function LeaderboardScreen() {
                             key={period}
                             onPress={() => setActivePeriod(period)}
                             className={`px-4 py-2 rounded-lg mx-1 ${activePeriod === period
-                                ? (isDark ? 'bg-indigo-900/50' : 'bg-indigo-100')
+                                ? (isDark ? 'bg-zinc-800' : 'bg-zinc-200')
                                 : 'bg-transparent'
                                 }`}
                         >
                             <Text
-                                className={`text-sm font-bold uppercase ${activePeriod === period
-                                    ? (isDark ? 'text-indigo-400' : 'text-indigo-600')
-                                    : (isDark ? 'text-slate-500' : 'text-slate-400')
+                                className={`text-sm font-bold uppercase tracking-wider ${activePeriod === period
+                                    ? (isDark ? 'text-white' : 'text-zinc-900')
+                                    : (isDark ? 'text-zinc-500' : 'text-zinc-400')
                                     }`}
                             >
                                 {period}
@@ -187,9 +191,9 @@ export default function LeaderboardScreen() {
                 }
             >
                 <View className="px-4 py-4">
-                    <View className={`rounded-2xl overflow-hidden shadow-sm ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
+                    <View className={`rounded-2xl overflow-hidden ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
                         {/* Table Header */}
-                        <View className={`flex-row px-4 py-3 ${isDark ? 'bg-slate-700 border-b border-slate-600' : 'bg-slate-50 border-b border-slate-100'}`}>
+                        <View className={`flex-row px-4 py-3 ${isDark ? 'bg-zinc-900/50 border-b border-zinc-800' : 'bg-zinc-50 border-b border-zinc-200'}`}>
                             <Text className={`flex-1 text-xs font-medium uppercase ${isDark ? 'text-slate-400' : 'text-slate-400'}`}>Player</Text>
                             <Text className={`w-20 text-xs font-medium uppercase text-right ${isDark ? 'text-slate-400' : 'text-slate-400'}`}>Score</Text>
                             <Text className={`w-20 text-xs font-medium uppercase text-right ${isDark ? 'text-slate-400' : 'text-slate-400'}`}>Prize</Text>
@@ -211,11 +215,13 @@ export default function LeaderboardScreen() {
                                 const isLastWinner = entry.rank === WINNER_COUNTS[activePeriod];
                                 const nextEntry = entries[index + 1];
                                 const showSeparator = isLastWinner && nextEntry && !isWinner(nextEntry.rank);
+                                const isCurrentUser = currentUserAddress && entry.player === currentUserAddress;
 
                                 return (
                                     <View key={entry.rank}>
                                         <View
-                                            className={`flex-row items-center px-4 py-3.5 ${isDark ? 'border-b border-slate-700' : 'border-b border-slate-50'} ${!isTopWinner ? 'opacity-60' : ''}`}
+                                            className={`flex-row items-center px-4 py-3.5 ${isDark ? 'border-b border-zinc-800' : 'border-b border-zinc-50'} ${!isTopWinner ? 'opacity-60' : ''} ${isCurrentUser ? (isDark ? 'bg-blue-500/20' : 'bg-blue-100') : ''}`}
+                                            style={isCurrentUser ? { borderLeftWidth: 4, borderLeftColor: '#3b82f6' } : undefined}
                                         >
                                             {/* Rank + Avatar + Name */}
                                             <View className="flex-1 flex-row items-center">
@@ -232,9 +238,16 @@ export default function LeaderboardScreen() {
                                                     </Text>
                                                 </View>
                                                 <View className="flex-1">
-                                                    <Text className={`text-sm font-medium ${isDark ? 'text-slate-200' : 'text-slate-800'}`} numberOfLines={1}>
-                                                        {entry.username || 'Anonymous'}
-                                                    </Text>
+                                                    <View className="flex-row items-center">
+                                                        <Text className={`text-sm font-medium ${isDark ? 'text-slate-200' : 'text-slate-800'}`} numberOfLines={1}>
+                                                            {entry.username || 'Anonymous'}
+                                                        </Text>
+                                                        {isCurrentUser && (
+                                                            <View className="ml-1.5 bg-blue-500 rounded px-1.5 py-0.5">
+                                                                <Text className="text-white text-[10px] font-medium">You</Text>
+                                                            </View>
+                                                        )}
+                                                    </View>
                                                     <Text className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-400'}`}>
                                                         {activePeriod === 'daily'
                                                             ? `${entry.guessesUsed}g • ${formatDuration(entry.timeMs)}`

@@ -5,3 +5,4 @@ export { GameLoading } from './GameLoading';
 export { GameLobby } from './GameLobby';
 export { GameResultModal } from './GameResultModal';
 export { InitializeSessionDialog } from './InitializeSessionDialog';
+export { CreateProfileForm } from './CreateProfileForm';

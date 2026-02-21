@@ -44,7 +44,7 @@ export default function RaffleScreen() {
     }, []);
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             <ScrollView
                 className="flex-1"
                 refreshControl={
@@ -52,12 +52,12 @@ export default function RaffleScreen() {
                 }
             >
                 {/* Header */}
-                <View className={`px-4 py-6 ${isDark ? 'bg-slate-800 border-b border-slate-700' : 'bg-white border-b border-slate-100'}`}>
+                <View className={`px-4 py-6 ${isDark ? 'bg-[#0f0f10] border-b border-zinc-800' : 'bg-white border-b border-zinc-200'}`}>
                     {/* Badge */}
                     <View className="items-center mb-4">
-                        <View className={`flex-row items-center px-3 py-1.5 rounded-lg ${isDark ? 'bg-indigo-900/40 border border-indigo-800' : 'bg-indigo-50 border border-indigo-100'}`}>
+                        <View className={`flex-row items-center px-3 py-1.5 rounded-lg ${isDark ? 'bg-zinc-800 border border-zinc-700' : 'bg-zinc-100 border border-zinc-200'}`}>
                             <View className="w-2 h-2 rounded-full bg-indigo-500 mr-2" />
-                            <Text className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>
+                            <Text className={`text-xs font-bold uppercase tracking-wider ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`}>
                                 Weekly Raffle
                             </Text>
                         </View>
@@ -95,7 +95,7 @@ export default function RaffleScreen() {
 
                 <View className="px-4 py-6 space-y-4">
                     {/* Your Status Card */}
-                    <View className={`rounded-2xl overflow-hidden shadow-sm mb-4 ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
+                    <View className={`rounded-2xl overflow-hidden shadow-sm mb-4 ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
                         <View
                             className={`p-5 flex-row items-center ${isEligible
                                 ? (isDark ? 'bg-emerald-900/30' : 'bg-emerald-50')
@@ -127,7 +127,7 @@ export default function RaffleScreen() {
                             </View>
 
                             {!isEligible && (
-                                <Pressable className="bg-indigo-600 px-4 py-2.5 rounded-full active:bg-indigo-700">
+                                <Pressable className="bg-[#1877F2] px-4 py-2.5 rounded-full active:opacity-90">
                                     <Text className="text-white font-bold text-sm">Play Now</Text>
                                 </Pressable>
                             )}
@@ -136,14 +136,14 @@ export default function RaffleScreen() {
 
                     {/* How it Works */}
                     <View className="flex-row gap-3 mb-4">
-                        <View className={`flex-1 p-4 rounded-xl shadow-sm ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
-                            <View className={`w-8 h-8 rounded-lg items-center justify-center mb-3 ${isDark ? 'bg-slate-700' : 'bg-slate-100'}`}>
+                        <View className={`flex-1 p-4 rounded-xl shadow-sm ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
+                            <View className={`w-8 h-8 rounded-lg items-center justify-center mb-3 ${isDark ? 'bg-zinc-800' : 'bg-slate-100'}`}>
                                 <Text className={`font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>1</Text>
                             </View>
                             <Text className={`font-bold mb-1 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>Play a Game</Text>
                             <Text className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Complete just 1 game to enter.</Text>
                         </View>
-                        <View className={`flex-1 p-4 rounded-xl shadow-sm ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
+                        <View className={`flex-1 p-4 rounded-xl shadow-sm ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
                             <View className={`w-8 h-8 rounded-lg items-center justify-center mb-3 ${isDark ? 'bg-slate-700' : 'bg-slate-100'}`}>
                                 <Text className={`font-bold ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>2</Text>
                             </View>
@@ -153,9 +153,9 @@ export default function RaffleScreen() {
                     </View>
 
                     {/* Hall of Fame */}
-                    <View className={`rounded-2xl overflow-hidden shadow-sm ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
+                    <View className={`rounded-2xl overflow-hidden shadow-sm ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
                         {/* Header */}
-                        <View className={`flex-row items-center px-4 py-3 ${isDark ? 'bg-slate-700 border-b border-slate-600' : 'bg-slate-50 border-b border-slate-100'}`}>
+                        <View className={`flex-row items-center px-4 py-3 ${isDark ? 'bg-zinc-800/50 border-b border-zinc-800' : 'bg-slate-50 border-b border-zinc-200'}`}>
                             <Trophy size={16} color="#f59e0b" />
                             <Text className={`ml-2 text-sm font-bold uppercase tracking-wider ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
                                 Hall of Fame

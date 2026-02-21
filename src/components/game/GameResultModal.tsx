@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Modal, Pressable, Share, Linking, useColorScheme } from 'react-native';
-import { X, Share2, RotateCcw, Trophy } from 'lucide-react-native';
+import { X, Share2, Trophy } from 'lucide-react-native';
 
 interface GameResultModalProps {
     visible: boolean;
@@ -62,7 +62,7 @@ export function GameResultModal({
     return (
         <Modal visible={visible} transparent animationType="fade">
             <View className="flex-1 items-center justify-center bg-black/60 px-6">
-                <View className={`w-full max-w-sm rounded-3xl p-6 ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
+                <View className={`w-full max-w-sm rounded-3xl p-6 ${isDark ? 'bg-[#1a1a1a] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
                     {/* Close button */}
                     <Pressable
                         onPress={onClose}
@@ -81,17 +81,17 @@ export function GameResultModal({
                             <Text className="text-4xl">{isWin ? '🎉' : '😔'}</Text>
                         </View>
                         <Text className={`text-2xl font-black ${
-                            isWin ? 'text-emerald-500' : isDark ? 'text-slate-300' : 'text-slate-600'
+                            isWin ? 'text-green-500' : 'text-red-500'
                         }`}>
                             {isWin ? 'VICTORY!' : 'GAME OVER'}
                         </Text>
                     </View>
 
                     {/* Stats */}
-                    <View className={`rounded-2xl p-4 mb-4 ${isDark ? 'bg-slate-700/50' : 'bg-slate-50'}`}>
+                    <View className={`rounded-2xl p-4 mb-4 ${isDark ? 'bg-zinc-900 border border-zinc-800' : 'bg-zinc-50 border border-zinc-100'}`}>
                         <View className={`flex-row justify-around ${isWin && timeTaken ? '' : ''}`}>
                             <View className="items-center flex-1">
-                                <Text className={`text-2xl font-black ${isDark ? 'text-indigo-400' : 'text-indigo-600'}`}>
+                                <Text className={`text-2xl font-black ${isDark ? 'text-white' : 'text-zinc-900'}`}>
                                     {guessesUsed}/7
                                 </Text>
                                 <Text className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
@@ -101,7 +101,7 @@ export function GameResultModal({
 
                             {isWin && timeTaken !== undefined && (
                                 <View className="items-center flex-1">
-                                    <Text className="text-2xl font-black text-amber-500">
+                                    <Text className={`text-2xl font-black ${isDark ? 'text-white' : 'text-zinc-900'}`}>
                                         {formatTime(timeTaken)}
                                     </Text>
                                     <Text className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
@@ -122,7 +122,7 @@ export function GameResultModal({
 
                         {/* Target Word */}
                         {targetWord && (
-                            <View className={`mt-4 pt-4 items-center ${isDark ? 'border-t border-slate-600' : 'border-t border-slate-200'}`}>
+                            <View className={`mt-4 pt-4 items-center ${isDark ? 'border-t border-zinc-800' : 'border-t border-zinc-200'}`}>
                                 <Text className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
                                     The word was
                                 </Text>
@@ -147,7 +147,7 @@ export function GameResultModal({
 
                             <Pressable
                                 onPress={handleShare}
-                                className={`flex-1 py-3.5 rounded-xl flex-row items-center justify-center ${isDark ? 'bg-slate-700 active:bg-slate-600' : 'bg-slate-100 active:bg-slate-200'}`}
+                                className={`flex-1 py-3.5 rounded-xl flex-row items-center justify-center border ${isDark ? 'border-zinc-700 active:bg-zinc-800' : 'border-zinc-200 active:bg-zinc-50'}`}
                             >
                                 <Share2 size={18} color={isDark ? '#e2e8f0' : '#475569'} />
                                 <Text className={`ml-2 font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>
@@ -160,21 +160,12 @@ export function GameResultModal({
                         {onViewLeaderboard && (
                             <Pressable
                                 onPress={onViewLeaderboard}
-                                className="py-3.5 rounded-xl flex-row items-center justify-center bg-amber-500 active:bg-amber-600"
+                                className="py-3.5 rounded-xl flex-row items-center justify-center bg-indigo-600 active:bg-indigo-700"
                             >
                                 <Trophy size={18} color="#fff" />
                                 <Text className="ml-2 font-bold text-white">Leaderboard</Text>
                             </Pressable>
                         )}
-
-                        {/* Done Button */}
-                        <Pressable
-                            onPress={onClose}
-                            className="py-3.5 rounded-xl flex-row items-center justify-center bg-indigo-600 active:bg-indigo-700"
-                        >
-                            <RotateCcw size={18} color="#fff" />
-                            <Text className="ml-2 font-bold text-white">Done</Text>
-                        </Pressable>
                     </View>
                 </View>
             </View>

@@ -22,7 +22,7 @@ export function GameHeader({
 
     return (
         <View
-            className={`flex-row justify-between items-center px-4 py-4 ${isDark ? 'bg-slate-900' : 'bg-white'}`}
+            className={`flex-row justify-between items-center px-4 py-4 ${isDark ? 'bg-[#09090b]' : 'bg-white'}`}
             style={{
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 2 },
@@ -41,9 +41,10 @@ export function GameHeader({
                         <X size={18} color={isDark ? '#94a3b8' : '#64748b'} />
                     </Pressable>
                 )}
-                <View className={`flex-row items-center px-3 py-2 rounded-full ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`}>
-                    <Clock size={14} color={isDark ? '#94a3b8' : '#64748b'} />
-                    <Text className={`ml-1.5 font-mono font-bold text-xs ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+                <View className={`flex-row items-center px-4 py-2 rounded-2xl ${isDark ? 'bg-zinc-800/80 border border-zinc-700' : 'bg-white border border-zinc-200'}`}
+                    style={{ shadowColor: '#000', shadowOffset: { width: 0, height: 1 }, shadowOpacity: 0.05, shadowRadius: 2 }}>
+                    <Clock size={16} color="#6366f1" />
+                    <Text className={`ml-2 font-mono font-bold text-base ${isDark ? 'text-zinc-200' : 'text-zinc-700'}`}>
                         {formatTime(timeElapsed)}
                     </Text>
                 </View>

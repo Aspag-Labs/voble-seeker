@@ -51,7 +51,7 @@ function StatCard({
     isDark: boolean;
 }) {
     return (
-        <View className={`flex-1 min-w-[47%] p-4 rounded-xl ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
+        <View className={`flex-1 min-w-[47%] p-4 rounded-xl ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
             <View className="flex-row items-center mb-2">
                 {icon}
                 <Text className={`ml-2 text-xs uppercase font-medium ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
@@ -109,9 +109,9 @@ export default function StatsScreen({ navigation }: any) {
     };
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             {/* Header */}
-            <View className={`px-4 py-3 ${isDark ? 'bg-slate-800 border-b border-slate-700' : 'bg-white border-b border-slate-100'}`}>
+            <View className={`px-4 py-3 ${isDark ? 'bg-[#0f0f10] border-b border-zinc-800' : 'bg-white border-b border-zinc-200'}`}>
                 <View className="flex-row items-center">
                     <Pressable onPress={() => navigation.goBack()} className="mr-3 p-1">
                         <ArrowLeft size={22} color={isDark ? '#f1f5f9' : '#1e293b'} />
@@ -171,8 +171,8 @@ export default function StatsScreen({ navigation }: any) {
                     </View>
 
                     {/* Prize Pool Breakdown */}
-                    <View className={`rounded-2xl overflow-hidden mb-4 ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
-                        <View className={`flex-row items-center px-4 py-3 ${isDark ? 'border-b border-slate-700' : 'border-b border-slate-100'}`}>
+                    <View className={`rounded-2xl overflow-hidden mb-4 ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
+                        <View className={`flex-row items-center px-4 py-3 ${isDark ? 'border-b border-zinc-800' : 'border-b border-zinc-200'}`}>
                             <TrendingUp size={18} color={isDark ? '#64748b' : '#94a3b8'} />
                             <Text className={`ml-2 font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>
                                 Prize Pool Breakdown
@@ -212,8 +212,8 @@ export default function StatsScreen({ navigation }: any) {
                     </View>
 
                     {/* Top Earners */}
-                    <View className={`rounded-2xl overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
-                        <View className={`flex-row items-center px-4 py-3 ${isDark ? 'border-b border-slate-700' : 'border-b border-slate-100'}`}>
+                    <View className={`rounded-2xl overflow-hidden ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
+                        <View className={`flex-row items-center px-4 py-3 ${isDark ? 'border-b border-zinc-800' : 'border-b border-zinc-200'}`}>
                             <Award size={18} color="#f59e0b" />
                             <Text className={`ml-2 font-bold ${isDark ? 'text-slate-200' : 'text-slate-700'}`}>
                                 Top 10 All-Time Earners

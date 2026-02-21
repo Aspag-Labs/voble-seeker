@@ -8,6 +8,7 @@ import { GameLoading } from '../components/game/GameLoading';
 import { GameLobby } from '../components/game/GameLobby';
 import { GameResultModal } from '../components/game/GameResultModal';
 import { InitializeSessionDialog } from '../components/game/InitializeSessionDialog';
+import { CreateProfileForm } from '../components/game/CreateProfileForm';
 
 import { useWallet } from '../providers';
 import { useGameMachine } from '../hooks/use-game-machine';
@@ -15,7 +16,7 @@ import { useFetchSession, LetterResult, type SessionData } from '../hooks/use-fe
 import { useSubmitGuess } from '../hooks/use-submit-guess';
 import { useCompleteGame } from '../hooks/use-complete-game';
 import { useUserProfile } from '../hooks/use-user-profile';
-import { useInitializeProfile } from '../hooks/use-initialize-profile';
+import { useInitializeSession } from '../hooks/use-initialize-session';
 import { usePrivateRollupAuth } from '../hooks/use-private-rollup-auth';
 import { getCurrentPeriodIds } from '../hooks/pdas';
 import { DEMO_WORDS } from '../lib/demo-words';
@@ -60,7 +61,7 @@ export default function GameScreen() {
     const { submitGuess: submitGuessToBlockchain } = useSubmitGuess();
     const { completeGame } = useCompleteGame();
     const { profile, isLoading: profileLoading, exists: profileExists } = useUserProfile();
-    const { initializeProfile, isLoading: isInitializingProfile } = useInitializeProfile();
+    const { initializeSession, isLoading: isInitializingSession } = useInitializeSession();
     const { authToken } = usePrivateRollupAuth();
 
     const [grid, setGrid] = useState<TileData[][]>(createEmptyGrid());
@@ -266,7 +267,7 @@ export default function GameScreen() {
     const handleInitializeSession = async () => {
         setIsCreatingSession(true);
         try {
-            const result = await initializeProfile('Player');
+            const result = await initializeSession();
             if (result.success) {
                 setSessionCreated(true);
                 await new Promise(resolve => setTimeout(resolve, 1500));
@@ -358,34 +359,11 @@ export default function GameScreen() {
         );
     }
 
-    // Profile not created
+    // Profile not created - show username input form
     if (!profileExists) {
         return (
             <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
-                <View className="flex-1 items-center justify-center px-8">
-                    <View className={`w-20 h-20 rounded-full items-center justify-center mb-4 ${isDark ? 'bg-indigo-900/40' : 'bg-indigo-100'}`}>
-                        <Text className="text-3xl">👤</Text>
-                    </View>
-                    <Text className={`text-2xl font-black mb-2 ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
-                        Create Profile
-                    </Text>
-                    <Text className={`text-center mb-6 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                        Set up your on-chain profile to start playing
-                    </Text>
-                    <Pressable
-                        onPress={() => handleInitializeSession()}
-                        disabled={isInitializingProfile}
-                        className={`w-full py-4 rounded-2xl items-center ${
-                            isInitializingProfile ? 'bg-indigo-400' : 'bg-indigo-600 active:bg-indigo-700'
-                        }`}
-                    >
-                        {isInitializingProfile ? (
-                            <ActivityIndicator color="#fff" size="small" />
-                        ) : (
-                            <Text className="text-white font-bold text-lg">Create Profile</Text>
-                        )}
-                    </Pressable>
-                </View>
+                <CreateProfileForm onSuccess={() => refetchSession()} />
             </SafeAreaView>
         );
     }

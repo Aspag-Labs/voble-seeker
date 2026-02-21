@@ -1,8 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
 import { useWallet } from '../providers';
+import { getCurrentPeriodIds } from '../lib/periods';
 
-// API base URL - in production this would be your backend URL
-const API_BASE_URL = 'https://voble.fun';
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://voble.fun';
 
 export type PeriodType = 'daily' | 'weekly' | 'monthly';
 
@@ -25,31 +25,6 @@ export interface UseLeaderboardResult {
     isFetching: boolean;
     error: string | null;
     refetch: () => void;
-}
-
-/**
- * Get current period IDs based on UTC+8 timezone
- */
-function getCurrentPeriodIds() {
-    const now = new Date();
-    // Convert to UTC+8
-    const utc8Offset = 8 * 60 * 60 * 1000;
-    const utc8Time = new Date(now.getTime() + utc8Offset);
-
-    const year = utc8Time.getUTCFullYear();
-    const month = String(utc8Time.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(utc8Time.getUTCDate()).padStart(2, '0');
-
-    // Calculate week number
-    const startOfYear = new Date(Date.UTC(year, 0, 1));
-    const daysSinceStart = Math.floor((utc8Time.getTime() - startOfYear.getTime()) / (24 * 60 * 60 * 1000));
-    const weekNumber = Math.ceil((daysSinceStart + startOfYear.getUTCDay() + 1) / 7);
-
-    return {
-        daily: `${year}-${month}-${day}`,
-        weekly: `${year}-W${String(weekNumber).padStart(2, '0')}`,
-        monthly: `${year}-${month}`,
-    };
 }
 
 export function useLeaderboard(periodType: PeriodType): UseLeaderboardResult {

@@ -137,7 +137,7 @@ export function GameLobby({
                         Ready to Compete?
                     </Text>
                     <Text className={`text-sm mb-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                        Guess the 6-letter word in 7 tries
+                        Test your vocabulary skills. Solve the word, climb the leaderboard, win the prize.
                     </Text>
 
                     <Pressable
@@ -146,10 +146,10 @@ export function GameLobby({
                         className={`py-4 rounded-2xl flex-row items-center justify-center ${
                             isDisabled
                                 ? isDark ? 'bg-slate-700' : 'bg-slate-200'
-                                : 'bg-indigo-600 active:bg-indigo-700'
+                                : 'bg-[#1877F2] active:opacity-90'
                         }`}
                         style={!isDisabled ? {
-                            shadowColor: '#4f46e5',
+                            shadowColor: '#1877F2',
                             shadowOffset: { width: 0, height: 4 },
                             shadowOpacity: 0.3,
                             shadowRadius: 8,

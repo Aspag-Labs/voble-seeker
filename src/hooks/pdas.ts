@@ -9,6 +9,13 @@ import {
     type Address,
     type ProgramDerivedAddressBump,
 } from '@solana/kit';
+import {
+    delegationRecordPdaFromDelegatedAccount,
+    delegationMetadataPdaFromDelegatedAccount,
+    delegateBufferPdaFromDelegatedAccountAndOwnerProgram,
+    permissionPdaFromAccount,
+    PERMISSION_PROGRAM_ID,
+} from '@magicblock-labs/ephemeral-rollups-kit';
 import { VOBLE_PROGRAM_ADDRESS } from '../generated';
 
 // Program addresses
@@ -148,6 +155,30 @@ export async function getLuckyDrawVaultPDA(): Promise<ProgramDerivedAddressResul
         seeds: [PDA_SEEDS.LUCKY_DRAW_VAULT],
     });
 }
+
+// === MagicBlock Delegation PDAs (for TEE session initialization) ===
+
+export async function getDelegationBufferPDA(pda: Address): Promise<readonly [Address, never]> {
+    const result = await delegateBufferPdaFromDelegatedAccountAndOwnerProgram(pda, VOBLE_PROGRAM_ADDRESS);
+    return [result, 0 as never] as const;
+}
+
+export async function getDelegationRecordPDA(pda: Address): Promise<readonly [Address, never]> {
+    const result = await delegationRecordPdaFromDelegatedAccount(pda);
+    return [result, 0 as never] as const;
+}
+
+export async function getDelegationMetadataPDA(pda: Address): Promise<readonly [Address, never]> {
+    const result = await delegationMetadataPdaFromDelegatedAccount(pda);
+    return [result, 0 as never] as const;
+}
+
+export async function getPermissionDelegationBufferPDA(permissionPda: Address): Promise<readonly [Address, never]> {
+    const result = await delegateBufferPdaFromDelegatedAccountAndOwnerProgram(permissionPda, PERMISSION_PROGRAM_ID as Address);
+    return [result, 0 as never] as const;
+}
+
+export { permissionPdaFromAccount };
 
 // Re-export period utilities
 export {

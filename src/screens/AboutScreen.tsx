@@ -29,8 +29,8 @@ interface SectionProps {
 
 function Section({ icon, title, children, isDark }: SectionProps) {
     return (
-        <View className={`rounded-2xl overflow-hidden mb-4 ${isDark ? 'bg-slate-800' : 'bg-white'}`}>
-            <View className={`flex-row items-center px-4 py-3 ${isDark ? 'border-b border-slate-700' : 'border-b border-slate-100'}`}>
+        <View className={`rounded-2xl overflow-hidden mb-4 ${isDark ? 'bg-[#0f0f10] border border-zinc-800' : 'bg-white border border-zinc-200'}`}>
+            <View className={`flex-row items-center px-4 py-3 ${isDark ? 'border-b border-zinc-800' : 'border-b border-zinc-200'}`}>
                 {icon}
                 <Text className={`ml-2 text-lg font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
                     {title}
@@ -62,10 +62,10 @@ function TableRow({ cells, isHeader, isDark }: { cells: string[]; isHeader?: boo
 
 function TileSample({ letter, color, isDark }: { letter: string; color: 'green' | 'purple' | 'gray'; isDark: boolean }) {
     const bg = color === 'green'
-        ? 'bg-emerald-500'
+        ? 'bg-[#14F195]'
         : color === 'purple'
-            ? 'bg-purple-500'
-            : isDark ? 'bg-slate-600' : 'bg-slate-400';
+            ? 'bg-[#9945FF]'
+            : isDark ? 'bg-gray-500' : 'bg-gray-500';
 
     return (
         <View className={`w-9 h-9 rounded-lg items-center justify-center ${bg}`}>
@@ -82,12 +82,14 @@ export default function AboutScreen({ navigation }: any) {
     const iconSize = 20;
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             {/* Header */}
-            <View className={`flex-row items-center px-4 py-3 ${isDark ? 'bg-slate-800 border-b border-slate-700' : 'bg-white border-b border-slate-100'}`}>
-                <Pressable onPress={() => navigation.goBack()} className="mr-3 p-1">
-                    <ArrowLeft size={22} color={isDark ? '#f1f5f9' : '#1e293b'} />
-                </Pressable>
+            <View className={`flex-row items-center px-4 py-3 ${isDark ? 'bg-[#0f0f10] border-b border-zinc-800' : 'bg-white border-b border-zinc-200'}`}>
+                {navigation.canGoBack() && (
+                    <Pressable onPress={() => navigation.goBack()} className="mr-3 p-1">
+                        <ArrowLeft size={22} color={isDark ? '#f1f5f9' : '#1e293b'} />
+                    </Pressable>
+                )}
                 <Text className={`text-xl font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
                     About Voble
                 </Text>
