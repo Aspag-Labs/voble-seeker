@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { View, Text, SafeAreaView, Pressable, ActivityIndicator, useColorScheme } from 'react-native';
+import { View, Text, Pressable, ActivityIndicator, useColorScheme } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Wallet } from 'lucide-react-native';
 
@@ -8,7 +8,7 @@ import { GameLoading } from '../components/game/GameLoading';
 import { GameLobby } from '../components/game/GameLobby';
 import { GameResultModal } from '../components/game/GameResultModal';
 import { InitializeSessionDialog } from '../components/game/InitializeSessionDialog';
-import { CreateProfileForm } from '../components/game/CreateProfileForm';
+import { CreateProfilePrompt } from '../components/game/CreateProfilePrompt';
 
 import { useWallet } from '../providers';
 import { useGameMachine } from '../hooks/use-game-machine';
@@ -305,7 +305,7 @@ export default function GameScreen() {
     // Wallet not connected
     if (!connected) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
                 <View className="flex-1 items-center justify-center px-8">
                     <View className={`w-24 h-24 rounded-full items-center justify-center mb-6 ${isDark ? 'bg-indigo-900/40' : 'bg-indigo-100'}`}>
                         <Wallet size={48} color={isDark ? '#818cf8' : '#6366f1'} />
@@ -338,14 +338,14 @@ export default function GameScreen() {
                         )}
                     </Pressable>
                 </View>
-            </SafeAreaView>
+            </View>
         );
     }
 
     // Loading states
     if (sessionLoading || profileLoading || phase === 'recovering') {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
                 <GameLoading
                     message={
                         phase === 'recovering'
@@ -355,23 +355,23 @@ export default function GameScreen() {
                                 : 'Loading game...'
                     }
                 />
-            </SafeAreaView>
+            </View>
         );
     }
 
-    // Profile not created - show username input form
+    // Profile not created - show promotional prompt
     if (!profileExists) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
-                <CreateProfileForm onSuccess={() => refetchSession()} />
-            </SafeAreaView>
+            <View className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-zinc-50'}`}>
+                <CreateProfilePrompt />
+            </View>
         );
     }
 
     // Initialize session dialog
     if (showInitSession) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
                 <GameLoading message="Checking game session..." />
                 <InitializeSessionDialog
                     visible={showInitSession}
@@ -380,14 +380,14 @@ export default function GameScreen() {
                     isAuthenticated={!!authToken}
                     onInitialize={handleInitializeSession}
                 />
-            </SafeAreaView>
+            </View>
         );
     }
 
     // Error state
     if (phase === 'error') {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
                 <View className="flex-1 items-center justify-center px-8">
                     <Text className="text-5xl mb-4">⚠️</Text>
                     <Text className={`text-xl font-bold mb-2 text-center ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
@@ -403,14 +403,14 @@ export default function GameScreen() {
                         <Text className="text-white font-bold">Try Again</Text>
                     </Pressable>
                 </View>
-            </SafeAreaView>
+            </View>
         );
     }
 
     // Result screen
     if (showResult && session) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
                 <GameResultModal
                     visible={true}
                     onClose={() => setPhase('idle')}
@@ -424,14 +424,14 @@ export default function GameScreen() {
                     score={session.score}
                     timeTaken={session.timeMs}
                 />
-            </SafeAreaView>
+            </View>
         );
     }
 
     // Lobby
     if (showLobby || isStartingGame) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
                 <GameLobby
                     isStartingGame={isStartingGame}
                     isBuyingTicket={phase === 'buying'}
@@ -441,13 +441,13 @@ export default function GameScreen() {
                     onBuyTicket={handleBuyTicket}
                     error={machineError}
                 />
-            </SafeAreaView>
+            </View>
         );
     }
 
     // Playing screen
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
+        <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-white'}`}>
             <GameHeader
                 timeElapsed={Math.floor(timeElapsed / 1000)}
                 guessesUsed={currentRow}
@@ -505,6 +505,6 @@ export default function GameScreen() {
                     disabled={phase !== 'playing'}
                 />
             </View>
-        </SafeAreaView>
+        </View>
     );
 }

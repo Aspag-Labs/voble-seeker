@@ -3,7 +3,6 @@ import {
     View,
     Text,
     ScrollView,
-    SafeAreaView,
     Pressable,
     RefreshControl,
     ActivityIndicator,
@@ -109,7 +108,7 @@ export default function StatsScreen({ navigation }: any) {
     };
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
+        <View className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             {/* Header */}
             <View className={`px-4 py-3 ${isDark ? 'bg-[#0f0f10] border-b border-zinc-800' : 'bg-white border-b border-zinc-200'}`}>
                 <View className="flex-row items-center">
@@ -268,6 +267,6 @@ export default function StatsScreen({ navigation }: any) {
                     <View className="h-8" />
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }

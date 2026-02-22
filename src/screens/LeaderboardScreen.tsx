@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Pressable, RefreshControl, SafeAreaView, useColorScheme } from 'react-native';
+import { View, Text, ScrollView, Pressable, RefreshControl, useColorScheme } from 'react-native';
 import { Users, Clock, Crown, Medal, RefreshCw } from 'lucide-react-native';
 import { useLeaderboard, useVaultBalances, PeriodType } from '../hooks';
 import { useWallet } from '../providers';
@@ -127,7 +127,7 @@ export default function LeaderboardScreen() {
     };
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
+        <View className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             {/* Header */}
             <View className={`px-4 py-4 ${isDark ? 'bg-[#09090b] border-b border-zinc-800' : 'bg-white border-b border-zinc-200'}`}>
                 {/* Period Tabs */}
@@ -294,6 +294,6 @@ export default function LeaderboardScreen() {
                     </View>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }

@@ -6,3 +6,4 @@ export { GameLobby } from './GameLobby';
 export { GameResultModal } from './GameResultModal';
 export { InitializeSessionDialog } from './InitializeSessionDialog';
 export { CreateProfileForm } from './CreateProfileForm';
+export { CreateProfilePrompt } from './CreateProfilePrompt';

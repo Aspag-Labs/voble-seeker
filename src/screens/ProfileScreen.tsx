@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { View, Text, ScrollView, Pressable, RefreshControl, SafeAreaView, Alert, ActivityIndicator, useColorScheme } from 'react-native';
-import { Wallet, Award, ChevronRight, Copy, Check, LogOut, BarChart3, UserPlus, Trash2 } from 'lucide-react-native';
+import { View, Text, ScrollView, Pressable, RefreshControl, Alert, ActivityIndicator, useColorScheme } from 'react-native';
+import { Wallet, ChevronRight, Copy, Check, LogOut, BarChart3, UserPlus, Trash2 } from 'lucide-react-native';
 import * as Clipboard from 'expo-clipboard';
 
 import { useWallet } from '../providers';
@@ -11,6 +11,7 @@ import { useTradeActivityPoints } from '../hooks/use-trade-activity-points';
 import { useCloseAccounts } from '../hooks/use-close-accounts';
 import { useClaim, type UnclaimedPrize, type UnclaimedRaffle } from '../hooks/use-claim';
 
+import { CreateProfileForm } from '../components/game/CreateProfileForm';
 import { StatsOverview } from '../components/profile/StatsOverview';
 import { GuessDistribution } from '../components/profile/GuessDistribution';
 import { GameHistoryList } from '../components/profile/GameHistoryList';
@@ -177,7 +178,7 @@ export default function ProfileScreen({ navigation }: any) {
     // Not connected
     if (!connected) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
+            <View className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
                 <View className="flex-1 items-center justify-center px-8">
                     <View className={`w-20 h-20 rounded-full items-center justify-center mb-6 ${isDark ? 'bg-[#0f0f10]' : 'bg-slate-100'}`}>
                         <Wallet size={40} color={isDark ? '#64748b' : '#94a3b8'} />
@@ -210,43 +211,33 @@ export default function ProfileScreen({ navigation }: any) {
                         )}
                     </Pressable>
                 </View>
-            </SafeAreaView>
+            </View>
         );
     }
 
     // Loading profile
     if (profileLoading) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
+            <View className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
                 <View className="flex-1 items-center justify-center">
                     <ActivityIndicator size="large" color={isDark ? '#818cf8' : '#6366f1'} />
                     <Text className={`mt-3 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>Loading profile...</Text>
                 </View>
-            </SafeAreaView>
+            </View>
         );
     }
 
-    // No profile
+    // No profile - show creation form
     if (!profileExists) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
-                <View className="flex-1 items-center justify-center px-8">
-                    <View className={`w-20 h-20 rounded-full items-center justify-center mb-6 ${isDark ? 'bg-indigo-900/40' : 'bg-indigo-100'}`}>
-                        <Award size={40} color={isDark ? '#818cf8' : '#6366f1'} />
-                    </View>
-                    <Text className={`text-2xl font-bold mb-2 text-center ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
-                        Create Your Profile
-                    </Text>
-                    <Text className={`text-center mb-8 ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                        Play your first game to create your on-chain profile automatically.
-                    </Text>
-                </View>
-            </SafeAreaView>
+            <View className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
+                <CreateProfileForm onSuccess={() => refetchProfile()} />
+            </View>
         );
     }
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
+        <View className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             <ScrollView
                 className="flex-1"
                 refreshControl={
@@ -419,6 +410,6 @@ export default function ProfileScreen({ navigation }: any) {
                     <View className="h-8" />
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }

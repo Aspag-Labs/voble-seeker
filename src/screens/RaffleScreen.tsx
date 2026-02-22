@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, ScrollView, Pressable, RefreshControl, SafeAreaView, useColorScheme } from 'react-native';
+import { View, Text, ScrollView, Pressable, RefreshControl, useColorScheme } from 'react-native';
 import { Trophy, CheckCircle, Ticket, Clock, RefreshCw } from 'lucide-react-native';
 import { useLuckyDraw } from '../hooks';
 
@@ -44,7 +44,7 @@ export default function RaffleScreen() {
     }, []);
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
+        <View className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             <ScrollView
                 className="flex-1"
                 refreshControl={
@@ -193,6 +193,6 @@ export default function RaffleScreen() {
                     </View>
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }

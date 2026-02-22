@@ -3,13 +3,11 @@ import {
     View,
     Text,
     ScrollView,
-    SafeAreaView,
     Pressable,
     Linking,
     useColorScheme,
 } from 'react-native';
 import {
-    ArrowLeft,
     BookOpen,
     Trophy,
     Target,
@@ -74,7 +72,7 @@ function TileSample({ letter, color, isDark }: { letter: string; color: 'green' 
     );
 }
 
-export default function AboutScreen({ navigation }: any) {
+export default function AboutScreen() {
     const colorScheme = useColorScheme();
     const isDark = colorScheme === 'dark';
 
@@ -82,19 +80,7 @@ export default function AboutScreen({ navigation }: any) {
     const iconSize = 20;
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
-            {/* Header */}
-            <View className={`flex-row items-center px-4 py-3 ${isDark ? 'bg-[#0f0f10] border-b border-zinc-800' : 'bg-white border-b border-zinc-200'}`}>
-                {navigation.canGoBack() && (
-                    <Pressable onPress={() => navigation.goBack()} className="mr-3 p-1">
-                        <ArrowLeft size={22} color={isDark ? '#f1f5f9' : '#1e293b'} />
-                    </Pressable>
-                )}
-                <Text className={`text-xl font-bold ${isDark ? 'text-slate-100' : 'text-slate-800'}`}>
-                    About Voble
-                </Text>
-            </View>
-
+        <View className={`flex-1 ${isDark ? 'bg-[#09090b]' : 'bg-slate-50'}`}>
             <ScrollView className="flex-1" showsVerticalScrollIndicator={false}>
                 <View className="px-4 py-4">
 
@@ -369,6 +355,6 @@ export default function AboutScreen({ navigation }: any) {
                     <View className="h-8" />
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }

@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Info, Dices, Swords, Trophy, User } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
+import AppHeader from '../components/AppHeader';
 import {
     GameScreen,
     LeaderboardScreen,
@@ -161,16 +162,19 @@ export default function RootNavigator() {
 
     return (
         <NavigationContainer theme={isDark ? DarkNavTheme : LightTheme}>
-            <Tab.Navigator
-                tabBar={(props) => <CustomTabBar {...props} />}
-                screenOptions={{ headerShown: false }}
-            >
-                <Tab.Screen name="About" component={AboutScreen} />
-                <Tab.Screen name="Raffle" component={RaffleScreen} />
-                <Tab.Screen name="Game" component={GameScreen} />
-                <Tab.Screen name="Leaderboard" component={LeaderboardScreen} />
-                <Tab.Screen name="Profile" component={ProfileStack} />
-            </Tab.Navigator>
+            <View style={{ flex: 1, backgroundColor: isDark ? '#09090b' : '#ffffff' }}>
+                <AppHeader />
+                <Tab.Navigator
+                    tabBar={(props) => <CustomTabBar {...props} />}
+                    screenOptions={{ headerShown: false }}
+                >
+                    <Tab.Screen name="About" component={AboutScreen} />
+                    <Tab.Screen name="Raffle" component={RaffleScreen} />
+                    <Tab.Screen name="Game" component={GameScreen} />
+                    <Tab.Screen name="Leaderboard" component={LeaderboardScreen} />
+                    <Tab.Screen name="Profile" component={ProfileStack} />
+                </Tab.Navigator>
+            </View>
         </NavigationContainer>
     );
 }

@@ -3,7 +3,6 @@ import {
     View,
     Text,
     ScrollView,
-    SafeAreaView,
     Pressable,
     ActivityIndicator,
     useColorScheme,
@@ -69,7 +68,7 @@ export default function ReferralScreen({ navigation }: any) {
 
     if (!connected) {
         return (
-            <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+            <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
                 <View className={`flex-row items-center px-4 py-3 ${isDark ? 'bg-slate-800 border-b border-slate-700' : 'bg-white border-b border-slate-100'}`}>
                     <Pressable onPress={() => navigation.goBack()} className="mr-3 p-1">
                         <ArrowLeft size={22} color={isDark ? '#f1f5f9' : '#1e293b'} />
@@ -84,12 +83,12 @@ export default function ReferralScreen({ navigation }: any) {
                         Connect your wallet to access the referral program
                     </Text>
                 </View>
-            </SafeAreaView>
+            </View>
         );
     }
 
     return (
-        <SafeAreaView className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
+        <View className={`flex-1 ${isDark ? 'bg-slate-900' : 'bg-slate-50'}`}>
             {/* Header */}
             <View className={`px-4 py-3 ${isDark ? 'bg-slate-800 border-b border-slate-700' : 'bg-white border-b border-slate-100'}`}>
                 <View className="flex-row items-center">
@@ -304,6 +303,6 @@ export default function ReferralScreen({ navigation }: any) {
                     <View className="h-8" />
                 </View>
             </ScrollView>
-        </SafeAreaView>
+        </View>
     );
 }
