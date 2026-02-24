@@ -18,8 +18,8 @@ export function getCurrentDayPeriodId(): string {
 
 export function getCurrentWeekPeriodId(): string {
     const now = new Date();
-    const utc8TimeStr = now.toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
-    const nowUtc8 = new Date(utc8TimeStr);
+    const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+    const nowUtc8 = new Date(utcMs + 8 * 3600000);
     const nowUnixSeconds = Math.floor(nowUtc8.getTime() / 1000);
     const elapsedSeconds = nowUnixSeconds - PERIOD_EPOCH_START;
     const weekNumber = Math.floor(elapsedSeconds / PERIOD_WEEKLY_DURATION);

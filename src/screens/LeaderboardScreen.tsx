@@ -53,9 +53,10 @@ export default function LeaderboardScreen() {
     useEffect(() => {
         const calculateTimeLeft = () => {
             const now = new Date();
-            const utc8TimeStr = now.toLocaleString('en-US', { timeZone: 'Asia/Singapore' });
-            const nowUtc8 = new Date(utc8TimeStr);
-            const targetDate = new Date(nowUtc8);
+            // Convert to UTC+8 without relying on locale string parsing
+            const utcMs = now.getTime() + now.getTimezoneOffset() * 60000;
+            const nowUtc8 = new Date(utcMs + 8 * 3600000);
+            const targetDate = new Date(nowUtc8.getTime());
 
             if (activePeriod === 'daily') {
                 targetDate.setDate(nowUtc8.getDate() + 1);

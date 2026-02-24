@@ -10,7 +10,7 @@ export default function AppHeader() {
     const isDark = colorScheme === 'dark';
     const insets = useSafeAreaInsets();
     const navigation = useNavigation<any>();
-    const { connected, address } = useWallet();
+    const { connected, address, disconnect, connect } = useWallet();
 
     // Web theme colors
     const cardBg = isDark ? '#171717' : '#ffffff';
@@ -59,7 +59,8 @@ export default function AppHeader() {
 
                     {/* Wallet button */}
                     {connected && truncatedAddress ? (
-                        <View
+                        <Pressable
+                            onPress={disconnect}
                             style={[
                                 styles.walletButton,
                                 { borderColor: outlineBorder },
@@ -73,10 +74,10 @@ export default function AppHeader() {
                                     {address?.slice(-1)?.toUpperCase()}
                                 </Text>
                             </View>
-                        </View>
+                        </Pressable>
                     ) : (
                         <Pressable
-                            onPress={() => navigation.navigate('Profile')}
+                            onPress={connect}
                             style={[
                                 styles.walletButton,
                                 { borderColor: outlineBorder },
