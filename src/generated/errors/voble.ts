@@ -92,6 +92,12 @@ export const VOBLE_ERROR__INSUFFICIENT_FUNDS = 0x1794; // 6036
 export const VOBLE_ERROR__NO_CLAIMABLE_AMOUNT = 0x1795; // 6037
 /** InvalidMerkleProof: Invalid Merkle proof for participant */
 export const VOBLE_ERROR__INVALID_MERKLE_PROOF = 0x1796; // 6038
+/** InvalidWinnerRank: Winner rank does not match position in winners list */
+export const VOBLE_ERROR__INVALID_WINNER_RANK = 0x1797; // 6039
+/** UnauthorizedSessionKey: Unauthorized session key */
+export const VOBLE_ERROR__UNAUTHORIZED_SESSION_KEY = 0x1798; // 6040
+/** SessionKeyNotSet: Session key not registered */
+export const VOBLE_ERROR__SESSION_KEY_NOT_SET = 0x1799; // 6041
 
 export type VobleError =
   | typeof VOBLE_ERROR__ALREADY_CLAIMED
@@ -119,6 +125,7 @@ export type VobleError =
   | typeof VOBLE_ERROR__INVALID_WINNER_ACCOUNT
   | typeof VOBLE_ERROR__INVALID_WINNER_COUNT
   | typeof VOBLE_ERROR__INVALID_WINNER_ORDER
+  | typeof VOBLE_ERROR__INVALID_WINNER_RANK
   | typeof VOBLE_ERROR__INVALID_WINNER_SPLITS
   | typeof VOBLE_ERROR__MATH_OVERFLOW
   | typeof VOBLE_ERROR__NO_CLAIMABLE_AMOUNT
@@ -130,8 +137,10 @@ export type VobleError =
   | typeof VOBLE_ERROR__PERIOD_TYPE_TOO_LONG
   | typeof VOBLE_ERROR__SESSION_ID_EMPTY
   | typeof VOBLE_ERROR__SESSION_ID_TOO_LONG
+  | typeof VOBLE_ERROR__SESSION_KEY_NOT_SET
   | typeof VOBLE_ERROR__TICKET_ALREADY_USED
   | typeof VOBLE_ERROR__UNAUTHORIZED
+  | typeof VOBLE_ERROR__UNAUTHORIZED_SESSION_KEY
   | typeof VOBLE_ERROR__WORD_NOT_SET;
 
 let vobleErrorMessages: Record<VobleError, string> | undefined;
@@ -162,6 +171,7 @@ if (process.env.NODE_ENV !== "production") {
     [VOBLE_ERROR__INVALID_WINNER_ACCOUNT]: `Invalid winner account provided`,
     [VOBLE_ERROR__INVALID_WINNER_COUNT]: `Invalid winner count (must be exactly 3)`,
     [VOBLE_ERROR__INVALID_WINNER_ORDER]: `Winners not sorted correctly by score`,
+    [VOBLE_ERROR__INVALID_WINNER_RANK]: `Winner rank does not match position in winners list`,
     [VOBLE_ERROR__INVALID_WINNER_SPLITS]: `Invalid winner splits configuration`,
     [VOBLE_ERROR__MATH_OVERFLOW]: `Math overflow`,
     [VOBLE_ERROR__NO_CLAIMABLE_AMOUNT]: `No claimable amount`,
@@ -173,8 +183,10 @@ if (process.env.NODE_ENV !== "production") {
     [VOBLE_ERROR__PERIOD_TYPE_TOO_LONG]: `Period type too long (max 10 characters)`,
     [VOBLE_ERROR__SESSION_ID_EMPTY]: `Session ID cannot be empty`,
     [VOBLE_ERROR__SESSION_ID_TOO_LONG]: `Session ID too long (max 50 characters)`,
+    [VOBLE_ERROR__SESSION_KEY_NOT_SET]: `Session key not registered`,
     [VOBLE_ERROR__TICKET_ALREADY_USED]: `Ticket receipt already used for this session`,
     [VOBLE_ERROR__UNAUTHORIZED]: `Unauthorized access`,
+    [VOBLE_ERROR__UNAUTHORIZED_SESSION_KEY]: `Unauthorized session key`,
     [VOBLE_ERROR__WORD_NOT_SET]: `Target word not set - VRF callback pending`,
   };
 }

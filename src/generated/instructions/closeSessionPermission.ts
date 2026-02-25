@@ -56,7 +56,8 @@ export type CloseSessionPermissionInstruction<
   TAccountPlayer extends string | AccountMeta<string> = string,
   TAccountSession extends string | AccountMeta<string> = string,
   TAccountPermission extends string | AccountMeta<string> = string,
-  TAccountPermissionProgram extends string | AccountMeta<string> = string,
+  TAccountPermissionProgram extends string | AccountMeta<string> =
+    "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1",
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
   InstructionWithData<ReadonlyUint8Array> &
@@ -128,7 +129,7 @@ export type CloseSessionPermissionAsyncInput<
   /** The session account */
   session?: Address<TAccountSession>;
   permission: Address<TAccountPermission>;
-  permissionProgram: Address<TAccountPermissionProgram>;
+  permissionProgram?: Address<TAccountPermissionProgram>;
 };
 
 export async function getCloseSessionPermissionInstructionAsync<
@@ -188,6 +189,10 @@ export async function getCloseSessionPermissionInstructionAsync<
       ],
     });
   }
+  if (!accounts.permissionProgram.value) {
+    accounts.permissionProgram.value =
+      "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1" as Address<"ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1">;
+  }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
@@ -223,7 +228,7 @@ export type CloseSessionPermissionInput<
   /** The session account */
   session: Address<TAccountSession>;
   permission: Address<TAccountPermission>;
-  permissionProgram: Address<TAccountPermissionProgram>;
+  permissionProgram?: Address<TAccountPermissionProgram>;
 };
 
 export function getCloseSessionPermissionInstruction<
@@ -268,6 +273,12 @@ export function getCloseSessionPermissionInstruction<
     keyof typeof originalAccounts,
     ResolvedAccount
   >;
+
+  // Resolve default values.
+  if (!accounts.permissionProgram.value) {
+    accounts.permissionProgram.value =
+      "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1" as Address<"ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1">;
+  }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({

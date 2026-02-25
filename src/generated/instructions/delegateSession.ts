@@ -61,7 +61,7 @@ export type DelegateSessionInstruction<
     string,
   TAccountSession extends string | AccountMeta<string> = string,
   TAccountOwnerProgram extends string | AccountMeta<string> =
-    "BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE",
+    "R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1",
   TAccountDelegationProgram extends string | AccountMeta<string> =
     "DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh",
   TAccountSystemProgram extends string | AccountMeta<string> =
@@ -245,7 +245,7 @@ export async function getDelegateSessionInstructionAsync<
   if (!accounts.bufferSession.value) {
     accounts.bufferSession.value = await getProgramDerivedAddress({
       programAddress:
-        "BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE" as Address<"BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE">,
+        "R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1" as Address<"R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1">,
       seeds: [
         getBytesEncoder().encode(new Uint8Array([98, 117, 102, 102, 101, 114])),
         getAddressEncoder().encode(expectAddress(accounts.session.value)),
@@ -279,7 +279,7 @@ export async function getDelegateSessionInstructionAsync<
   }
   if (!accounts.ownerProgram.value) {
     accounts.ownerProgram.value =
-      "BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE" as Address<"BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE">;
+      "R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1" as Address<"R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1">;
   }
   if (!accounts.delegationProgram.value) {
     accounts.delegationProgram.value =
@@ -415,7 +415,7 @@ export function getDelegateSessionInstruction<
   // Resolve default values.
   if (!accounts.ownerProgram.value) {
     accounts.ownerProgram.value =
-      "BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE" as Address<"BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE">;
+      "R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1" as Address<"R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1">;
   }
   if (!accounts.delegationProgram.value) {
     accounts.delegationProgram.value =

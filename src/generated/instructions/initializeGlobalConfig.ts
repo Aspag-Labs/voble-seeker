@@ -16,6 +16,8 @@ import {
   getArrayEncoder,
   getBytesDecoder,
   getBytesEncoder,
+  getOptionDecoder,
+  getOptionEncoder,
   getProgramDerivedAddress,
   getStructDecoder,
   getStructEncoder,
@@ -33,6 +35,8 @@ import {
   type Instruction,
   type InstructionWithAccounts,
   type InstructionWithData,
+  type Option,
+  type OptionOrNullable,
   type ReadonlyAccount,
   type ReadonlyUint8Array,
   type TransactionSigner,
@@ -98,6 +102,7 @@ export type InitializeGlobalConfigInstructionData = {
   winnerSplitsMonthly: Array<number>;
   usdcMint: Address;
   vobleMint: Address;
+  cronAuthority: Option<Address>;
 };
 
 export type InitializeGlobalConfigInstructionDataArgs = {
@@ -112,6 +117,7 @@ export type InitializeGlobalConfigInstructionDataArgs = {
   winnerSplitsMonthly: Array<number>;
   usdcMint: Address;
   vobleMint: Address;
+  cronAuthority: OptionOrNullable<Address>;
 };
 
 export function getInitializeGlobalConfigInstructionDataEncoder(): Encoder<InitializeGlobalConfigInstructionDataArgs> {
@@ -129,6 +135,7 @@ export function getInitializeGlobalConfigInstructionDataEncoder(): Encoder<Initi
       ["winnerSplitsMonthly", getArrayEncoder(getU16Encoder())],
       ["usdcMint", getAddressEncoder()],
       ["vobleMint", getAddressEncoder()],
+      ["cronAuthority", getOptionEncoder(getAddressEncoder())],
     ]),
     (value) => ({
       ...value,
@@ -151,6 +158,7 @@ export function getInitializeGlobalConfigInstructionDataDecoder(): Decoder<Initi
     ["winnerSplitsMonthly", getArrayDecoder(getU16Decoder())],
     ["usdcMint", getAddressDecoder()],
     ["vobleMint", getAddressDecoder()],
+    ["cronAuthority", getOptionDecoder(getAddressDecoder())],
   ]);
 }
 
@@ -187,6 +195,7 @@ export type InitializeGlobalConfigAsyncInput<
   winnerSplitsMonthly: InitializeGlobalConfigInstructionDataArgs["winnerSplitsMonthly"];
   usdcMint: InitializeGlobalConfigInstructionDataArgs["usdcMint"];
   vobleMint: InitializeGlobalConfigInstructionDataArgs["vobleMint"];
+  cronAuthority: InitializeGlobalConfigInstructionDataArgs["cronAuthority"];
 };
 
 export async function getInitializeGlobalConfigInstructionAsync<
@@ -311,6 +320,7 @@ export type InitializeGlobalConfigInput<
   winnerSplitsMonthly: InitializeGlobalConfigInstructionDataArgs["winnerSplitsMonthly"];
   usdcMint: InitializeGlobalConfigInstructionDataArgs["usdcMint"];
   vobleMint: InitializeGlobalConfigInstructionDataArgs["vobleMint"];
+  cronAuthority: InitializeGlobalConfigInstructionDataArgs["cronAuthority"];
 };
 
 export function getInitializeGlobalConfigInstruction<

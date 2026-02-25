@@ -56,14 +56,16 @@ export type DelegateTargetWordPermissionInstruction<
   TAccountPlayer extends string | AccountMeta<string> = string,
   TAccountTargetWord extends string | AccountMeta<string> = string,
   TAccountPermission extends string | AccountMeta<string> = string,
-  TAccountPermissionProgram extends string | AccountMeta<string> = string,
+  TAccountPermissionProgram extends string | AccountMeta<string> =
+    "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1",
   TAccountSystemProgram extends string | AccountMeta<string> =
     "11111111111111111111111111111111",
   TAccountOwnerProgram extends string | AccountMeta<string> = string,
   TAccountDelegationBuffer extends string | AccountMeta<string> = string,
   TAccountDelegationRecord extends string | AccountMeta<string> = string,
   TAccountDelegationMetadata extends string | AccountMeta<string> = string,
-  TAccountDelegationProgram extends string | AccountMeta<string> = string,
+  TAccountDelegationProgram extends string | AccountMeta<string> =
+    "DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh",
   TAccountValidator extends string | AccountMeta<string> = string,
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
 > = Instruction<TProgram> &
@@ -164,13 +166,13 @@ export type DelegateTargetWordPermissionAsyncInput<
   /** The target word account to delegate */
   targetWord?: Address<TAccountTargetWord>;
   permission: Address<TAccountPermission>;
-  permissionProgram: Address<TAccountPermissionProgram>;
+  permissionProgram?: Address<TAccountPermissionProgram>;
   systemProgram?: Address<TAccountSystemProgram>;
   ownerProgram: Address<TAccountOwnerProgram>;
   delegationBuffer: Address<TAccountDelegationBuffer>;
   delegationRecord: Address<TAccountDelegationRecord>;
   delegationMetadata: Address<TAccountDelegationMetadata>;
-  delegationProgram: Address<TAccountDelegationProgram>;
+  delegationProgram?: Address<TAccountDelegationProgram>;
   validator: Address<TAccountValidator>;
 };
 
@@ -271,9 +273,17 @@ export async function getDelegateTargetWordPermissionInstructionAsync<
       ],
     });
   }
+  if (!accounts.permissionProgram.value) {
+    accounts.permissionProgram.value =
+      "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1" as Address<"ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1">;
+  }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
       "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
+  }
+  if (!accounts.delegationProgram.value) {
+    accounts.delegationProgram.value =
+      "DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh" as Address<"DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh">;
   }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
@@ -331,13 +341,13 @@ export type DelegateTargetWordPermissionInput<
   /** The target word account to delegate */
   targetWord: Address<TAccountTargetWord>;
   permission: Address<TAccountPermission>;
-  permissionProgram: Address<TAccountPermissionProgram>;
+  permissionProgram?: Address<TAccountPermissionProgram>;
   systemProgram?: Address<TAccountSystemProgram>;
   ownerProgram: Address<TAccountOwnerProgram>;
   delegationBuffer: Address<TAccountDelegationBuffer>;
   delegationRecord: Address<TAccountDelegationRecord>;
   delegationMetadata: Address<TAccountDelegationMetadata>;
-  delegationProgram: Address<TAccountDelegationProgram>;
+  delegationProgram?: Address<TAccountDelegationProgram>;
   validator: Address<TAccountValidator>;
 };
 
@@ -425,9 +435,17 @@ export function getDelegateTargetWordPermissionInstruction<
   >;
 
   // Resolve default values.
+  if (!accounts.permissionProgram.value) {
+    accounts.permissionProgram.value =
+      "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1" as Address<"ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1">;
+  }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
       "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
+  }
+  if (!accounts.delegationProgram.value) {
+    accounts.delegationProgram.value =
+      "DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh" as Address<"DELeGGvXpWV2fqJUhqcF5ZSYMS4JTLjteaAMARRSaeSh">;
   }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");

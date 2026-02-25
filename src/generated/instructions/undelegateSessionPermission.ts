@@ -27,6 +27,7 @@ import {
   type InstructionWithAccounts,
   type InstructionWithData,
   type ReadonlyAccount,
+  type ReadonlySignerAccount,
   type ReadonlyUint8Array,
   type TransactionSigner,
   type WritableAccount,
@@ -55,7 +56,8 @@ export type UndelegateSessionPermissionInstruction<
   TAccountPlayer extends string | AccountMeta<string> = string,
   TAccountSession extends string | AccountMeta<string> = string,
   TAccountPermission extends string | AccountMeta<string> = string,
-  TAccountPermissionProgram extends string | AccountMeta<string> = string,
+  TAccountPermissionProgram extends string | AccountMeta<string> =
+    "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1",
   TAccountMagicProgram extends string | AccountMeta<string> = string,
   TAccountMagicContext extends string | AccountMeta<string> = string,
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
@@ -68,7 +70,8 @@ export type UndelegateSessionPermissionInstruction<
             AccountSignerMeta<TAccountPayer>
         : TAccountPayer,
       TAccountPlayer extends string
-        ? ReadonlyAccount<TAccountPlayer>
+        ? ReadonlySignerAccount<TAccountPlayer> &
+            AccountSignerMeta<TAccountPlayer>
         : TAccountPlayer,
       TAccountSession extends string
         ? WritableAccount<TAccountSession>
@@ -131,10 +134,11 @@ export type UndelegateSessionPermissionAsyncInput<
   TAccountMagicContext extends string = string,
 > = {
   payer: TransactionSigner<TAccountPayer>;
-  player: Address<TAccountPlayer>;
+  /** The player who owns the session — must sign */
+  player: TransactionSigner<TAccountPlayer>;
   session?: Address<TAccountSession>;
   permission: Address<TAccountPermission>;
-  permissionProgram: Address<TAccountPermissionProgram>;
+  permissionProgram?: Address<TAccountPermissionProgram>;
   magicProgram: Address<TAccountMagicProgram>;
   magicContext: Address<TAccountMagicContext>;
 };
@@ -204,6 +208,10 @@ export async function getUndelegateSessionPermissionInstructionAsync<
       ],
     });
   }
+  if (!accounts.permissionProgram.value) {
+    accounts.permissionProgram.value =
+      "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1" as Address<"ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1">;
+  }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
@@ -240,10 +248,11 @@ export type UndelegateSessionPermissionInput<
   TAccountMagicContext extends string = string,
 > = {
   payer: TransactionSigner<TAccountPayer>;
-  player: Address<TAccountPlayer>;
+  /** The player who owns the session — must sign */
+  player: TransactionSigner<TAccountPlayer>;
   session: Address<TAccountSession>;
   permission: Address<TAccountPermission>;
-  permissionProgram: Address<TAccountPermissionProgram>;
+  permissionProgram?: Address<TAccountPermissionProgram>;
   magicProgram: Address<TAccountMagicProgram>;
   magicContext: Address<TAccountMagicContext>;
 };
@@ -299,6 +308,12 @@ export function getUndelegateSessionPermissionInstruction<
     ResolvedAccount
   >;
 
+  // Resolve default values.
+  if (!accounts.permissionProgram.value) {
+    accounts.permissionProgram.value =
+      "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1" as Address<"ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1">;
+  }
+
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
@@ -331,6 +346,7 @@ export type ParsedUndelegateSessionPermissionInstruction<
   programAddress: Address<TProgram>;
   accounts: {
     payer: TAccountMetas[0];
+    /** The player who owns the session — must sign */
     player: TAccountMetas[1];
     session: TAccountMetas[2];
     permission: TAccountMetas[3];

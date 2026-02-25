@@ -71,6 +71,7 @@ export type UserProfile = {
   createdAt: bigint;
   lastPlayed: bigint;
   activityPoints: number;
+  authorizedSessionKey: Address;
 };
 
 export type UserProfileArgs = {
@@ -86,6 +87,7 @@ export type UserProfileArgs = {
   createdAt: number | bigint;
   lastPlayed: number | bigint;
   activityPoints: number;
+  authorizedSessionKey: Address;
 };
 
 /** Gets the encoder for {@link UserProfileArgs} account data. */
@@ -108,6 +110,7 @@ export function getUserProfileEncoder(): Encoder<UserProfileArgs> {
       ["createdAt", getI64Encoder()],
       ["lastPlayed", getI64Encoder()],
       ["activityPoints", getU32Encoder()],
+      ["authorizedSessionKey", getAddressEncoder()],
     ]),
     (value) => ({ ...value, discriminator: USER_PROFILE_DISCRIMINATOR }),
   );
@@ -129,6 +132,7 @@ export function getUserProfileDecoder(): Decoder<UserProfile> {
     ["createdAt", getI64Decoder()],
     ["lastPlayed", getI64Decoder()],
     ["activityPoints", getU32Decoder()],
+    ["authorizedSessionKey", getAddressDecoder()],
   ]);
 }
 

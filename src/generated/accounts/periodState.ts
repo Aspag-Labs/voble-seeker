@@ -71,6 +71,7 @@ export type PeriodState = {
   totalParticipants: number;
   vaultBalanceAtFinalization: bigint;
   winners: Array<Address>;
+  prizeAmounts: Array<bigint>;
 };
 
 export type PeriodStateArgs = {
@@ -80,6 +81,7 @@ export type PeriodStateArgs = {
   totalParticipants: number;
   vaultBalanceAtFinalization: number | bigint;
   winners: Array<Address>;
+  prizeAmounts: Array<number | bigint>;
 };
 
 /** Gets the encoder for {@link PeriodStateArgs} account data. */
@@ -93,6 +95,7 @@ export function getPeriodStateEncoder(): Encoder<PeriodStateArgs> {
       ["totalParticipants", getU32Encoder()],
       ["vaultBalanceAtFinalization", getU64Encoder()],
       ["winners", getArrayEncoder(getAddressEncoder())],
+      ["prizeAmounts", getArrayEncoder(getU64Encoder())],
     ]),
     (value) => ({ ...value, discriminator: PERIOD_STATE_DISCRIMINATOR }),
   );
@@ -108,6 +111,7 @@ export function getPeriodStateDecoder(): Decoder<PeriodState> {
     ["totalParticipants", getU32Decoder()],
     ["vaultBalanceAtFinalization", getU64Decoder()],
     ["winners", getArrayDecoder(getAddressDecoder())],
+    ["prizeAmounts", getArrayDecoder(getU64Decoder())],
   ]);
 }
 

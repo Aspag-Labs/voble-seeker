@@ -53,13 +53,12 @@ import {
   type ParsedTradeActivityPointsInstruction,
   type ParsedUndelegateSessionPermissionInstruction,
   type ParsedUpdatePlayerStatsInstruction,
-  type ParsedUpdateVobleMintInstruction,
   type ParsedWithdrawPlatformRevenueInstruction,
   type ParsedWithdrawReferralPayoutInstruction,
 } from "../instructions";
 
 export const VOBLE_PROGRAM_ADDRESS =
-  "BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE" as Address<"BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE">;
+  "R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1" as Address<"R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1">;
 
 export enum VobleAccount {
   GlobalConfig,
@@ -221,7 +220,6 @@ export enum VobleInstruction {
   TradeActivityPoints,
   UndelegateSessionPermission,
   UpdatePlayerStats,
-  UpdateVobleMint,
   WithdrawPlatformRevenue,
   WithdrawReferralPayout,
 }
@@ -663,17 +661,6 @@ export function identifyVobleInstruction(
     containsBytes(
       data,
       fixEncoderSize(getBytesEncoder(), 8).encode(
-        new Uint8Array([47, 222, 60, 61, 229, 124, 101, 4]),
-      ),
-      0,
-    )
-  ) {
-    return VobleInstruction.UpdateVobleMint;
-  }
-  if (
-    containsBytes(
-      data,
-      fixEncoderSize(getBytesEncoder(), 8).encode(
         new Uint8Array([224, 137, 184, 13, 183, 171, 214, 128]),
       ),
       0,
@@ -698,7 +685,7 @@ export function identifyVobleInstruction(
 }
 
 export type ParsedVobleInstruction<
-  TProgram extends string = "BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE",
+  TProgram extends string = "R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1",
 > =
   | ({
       instructionType: VobleInstruction.BuyTicketAndStartGame;
@@ -817,9 +804,6 @@ export type ParsedVobleInstruction<
   | ({
       instructionType: VobleInstruction.UpdatePlayerStats;
     } & ParsedUpdatePlayerStatsInstruction<TProgram>)
-  | ({
-      instructionType: VobleInstruction.UpdateVobleMint;
-    } & ParsedUpdateVobleMintInstruction<TProgram>)
   | ({
       instructionType: VobleInstruction.WithdrawPlatformRevenue;
     } & ParsedWithdrawPlatformRevenueInstruction<TProgram>)

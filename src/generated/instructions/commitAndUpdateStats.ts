@@ -65,7 +65,7 @@ export type CommitAndUpdateStatsInstruction<
   TAccountMonthlyLeaderboard extends string | AccountMeta<string> = string,
   TAccountUserProfile extends string | AccountMeta<string> = string,
   TAccountProgramId extends string | AccountMeta<string> =
-    "BGcXqLXH8xj92FZHmkb38qs5mbJ6qMboix2UyqmfHSvE",
+    "R9ogW7gzCXaiPA9E8vRkAREogpWT4qCsX6odLCeNCv1",
   TAccountMagicProgram extends string | AccountMeta<string> =
     "Magic11111111111111111111111111111111111111",
   TAccountMagicContext extends string | AccountMeta<string> =
@@ -187,6 +187,7 @@ export type CommitAndUpdateStatsAsyncInput<
   dailyLeaderboard: Address<TAccountDailyLeaderboard>;
   weeklyLeaderboard: Address<TAccountWeeklyLeaderboard>;
   monthlyLeaderboard: Address<TAccountMonthlyLeaderboard>;
+  /** User profile — verified for authorized session key */
   userProfile?: Address<TAccountUserProfile>;
   programId?: Address<TAccountProgramId>;
   magicProgram?: Address<TAccountMagicProgram>;
@@ -359,6 +360,7 @@ export type CommitAndUpdateStatsInput<
   dailyLeaderboard: Address<TAccountDailyLeaderboard>;
   weeklyLeaderboard: Address<TAccountWeeklyLeaderboard>;
   monthlyLeaderboard: Address<TAccountMonthlyLeaderboard>;
+  /** User profile — verified for authorized session key */
   userProfile: Address<TAccountUserProfile>;
   programId?: Address<TAccountProgramId>;
   magicProgram?: Address<TAccountMagicProgram>;
@@ -499,6 +501,7 @@ export type ParsedCommitAndUpdateStatsInstruction<
     dailyLeaderboard: TAccountMetas[3];
     weeklyLeaderboard: TAccountMetas[4];
     monthlyLeaderboard: TAccountMetas[5];
+    /** User profile — verified for authorized session key */
     userProfile: TAccountMetas[6];
     programId: TAccountMetas[7];
     magicProgram: TAccountMetas[8];

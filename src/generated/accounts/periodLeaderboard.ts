@@ -78,6 +78,7 @@ export type PeriodLeaderboard = {
   entries: Array<LeaderEntry>;
   totalPlayers: number;
   prizePool: bigint;
+  luckyDrawPool: bigint;
   finalized: boolean;
   createdAt: bigint;
   finalizedAt: Option<bigint>;
@@ -89,6 +90,7 @@ export type PeriodLeaderboardArgs = {
   entries: Array<LeaderEntryArgs>;
   totalPlayers: number;
   prizePool: number | bigint;
+  luckyDrawPool: number | bigint;
   finalized: boolean;
   createdAt: number | bigint;
   finalizedAt: OptionOrNullable<number | bigint>;
@@ -104,6 +106,7 @@ export function getPeriodLeaderboardEncoder(): Encoder<PeriodLeaderboardArgs> {
       ["entries", getArrayEncoder(getLeaderEntryEncoder())],
       ["totalPlayers", getU32Encoder()],
       ["prizePool", getU64Encoder()],
+      ["luckyDrawPool", getU64Encoder()],
       ["finalized", getBooleanEncoder()],
       ["createdAt", getI64Encoder()],
       ["finalizedAt", getOptionEncoder(getI64Encoder())],
@@ -121,6 +124,7 @@ export function getPeriodLeaderboardDecoder(): Decoder<PeriodLeaderboard> {
     ["entries", getArrayDecoder(getLeaderEntryDecoder())],
     ["totalPlayers", getU32Decoder()],
     ["prizePool", getU64Decoder()],
+    ["luckyDrawPool", getU64Decoder()],
     ["finalized", getBooleanDecoder()],
     ["createdAt", getI64Decoder()],
     ["finalizedAt", getOptionDecoder(getI64Decoder())],

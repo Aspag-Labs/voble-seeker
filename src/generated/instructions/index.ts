@@ -45,6 +45,5 @@ export * from "./submitGuess";
 export * from "./tradeActivityPoints";
 export * from "./undelegateSessionPermission";
 export * from "./updatePlayerStats";
-export * from "./updateVobleMint";
 export * from "./withdrawPlatformRevenue";
 export * from "./withdrawReferralPayout";

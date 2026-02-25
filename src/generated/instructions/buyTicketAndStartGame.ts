@@ -12,6 +12,7 @@ import {
   combineCodec,
   fixDecoderSize,
   fixEncoderSize,
+  getAddressDecoder,
   getAddressEncoder,
   getBytesDecoder,
   getBytesEncoder,
@@ -68,6 +69,9 @@ export type BuyTicketAndStartGameInstruction<
   TAccountLuckyDrawVault extends string | AccountMeta<string> = string,
   TAccountPayoutVault extends string | AccountMeta<string> = string,
   TAccountPayerTokenAccount extends string | AccountMeta<string> = string,
+  TAccountDailyLeaderboard extends string | AccountMeta<string> = string,
+  TAccountWeeklyLeaderboard extends string | AccountMeta<string> = string,
+  TAccountMonthlyLeaderboard extends string | AccountMeta<string> = string,
   TAccountSystemProgram extends string | AccountMeta<string> =
     "11111111111111111111111111111111",
   TAccountTokenProgram extends string | AccountMeta<string> =
@@ -113,6 +117,15 @@ export type BuyTicketAndStartGameInstruction<
       TAccountPayerTokenAccount extends string
         ? WritableAccount<TAccountPayerTokenAccount>
         : TAccountPayerTokenAccount,
+      TAccountDailyLeaderboard extends string
+        ? WritableAccount<TAccountDailyLeaderboard>
+        : TAccountDailyLeaderboard,
+      TAccountWeeklyLeaderboard extends string
+        ? WritableAccount<TAccountWeeklyLeaderboard>
+        : TAccountWeeklyLeaderboard,
+      TAccountMonthlyLeaderboard extends string
+        ? WritableAccount<TAccountMonthlyLeaderboard>
+        : TAccountMonthlyLeaderboard,
       TAccountSystemProgram extends string
         ? ReadonlyAccount<TAccountSystemProgram>
         : TAccountSystemProgram,
@@ -128,16 +141,36 @@ export type BuyTicketAndStartGameInstruction<
 
 export type BuyTicketAndStartGameInstructionData = {
   discriminator: ReadonlyUint8Array;
-  periodId: string;
+  dailyPeriodId: string;
+  weeklyPeriodId: string;
+  monthlyPeriodId: string;
+  authorizedSessionKey: Address;
 };
 
-export type BuyTicketAndStartGameInstructionDataArgs = { periodId: string };
+export type BuyTicketAndStartGameInstructionDataArgs = {
+  dailyPeriodId: string;
+  weeklyPeriodId: string;
+  monthlyPeriodId: string;
+  authorizedSessionKey: Address;
+};
 
 export function getBuyTicketAndStartGameInstructionDataEncoder(): Encoder<BuyTicketAndStartGameInstructionDataArgs> {
   return transformEncoder(
     getStructEncoder([
       ["discriminator", fixEncoderSize(getBytesEncoder(), 8)],
-      ["periodId", addEncoderSizePrefix(getUtf8Encoder(), getU32Encoder())],
+      [
+        "dailyPeriodId",
+        addEncoderSizePrefix(getUtf8Encoder(), getU32Encoder()),
+      ],
+      [
+        "weeklyPeriodId",
+        addEncoderSizePrefix(getUtf8Encoder(), getU32Encoder()),
+      ],
+      [
+        "monthlyPeriodId",
+        addEncoderSizePrefix(getUtf8Encoder(), getU32Encoder()),
+      ],
+      ["authorizedSessionKey", getAddressEncoder()],
     ]),
     (value) => ({
       ...value,
@@ -149,7 +182,13 @@ export function getBuyTicketAndStartGameInstructionDataEncoder(): Encoder<BuyTic
 export function getBuyTicketAndStartGameInstructionDataDecoder(): Decoder<BuyTicketAndStartGameInstructionData> {
   return getStructDecoder([
     ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
-    ["periodId", addDecoderSizePrefix(getUtf8Decoder(), getU32Decoder())],
+    ["dailyPeriodId", addDecoderSizePrefix(getUtf8Decoder(), getU32Decoder())],
+    ["weeklyPeriodId", addDecoderSizePrefix(getUtf8Decoder(), getU32Decoder())],
+    [
+      "monthlyPeriodId",
+      addDecoderSizePrefix(getUtf8Decoder(), getU32Decoder()),
+    ],
+    ["authorizedSessionKey", getAddressDecoder()],
   ]);
 }
 
@@ -175,6 +214,9 @@ export type BuyTicketAndStartGameAsyncInput<
   TAccountLuckyDrawVault extends string = string,
   TAccountPayoutVault extends string = string,
   TAccountPayerTokenAccount extends string = string,
+  TAccountDailyLeaderboard extends string = string,
+  TAccountWeeklyLeaderboard extends string = string,
+  TAccountMonthlyLeaderboard extends string = string,
   TAccountSystemProgram extends string = string,
   TAccountTokenProgram extends string = string,
   TAccountAssociatedTokenProgram extends string = string,
@@ -190,10 +232,16 @@ export type BuyTicketAndStartGameAsyncInput<
   luckyDrawVault?: Address<TAccountLuckyDrawVault>;
   payoutVault?: Address<TAccountPayoutVault>;
   payerTokenAccount: Address<TAccountPayerTokenAccount>;
+  dailyLeaderboard: Address<TAccountDailyLeaderboard>;
+  weeklyLeaderboard: Address<TAccountWeeklyLeaderboard>;
+  monthlyLeaderboard: Address<TAccountMonthlyLeaderboard>;
   systemProgram?: Address<TAccountSystemProgram>;
   tokenProgram?: Address<TAccountTokenProgram>;
   associatedTokenProgram?: Address<TAccountAssociatedTokenProgram>;
-  periodId: BuyTicketAndStartGameInstructionDataArgs["periodId"];
+  dailyPeriodId: BuyTicketAndStartGameInstructionDataArgs["dailyPeriodId"];
+  weeklyPeriodId: BuyTicketAndStartGameInstructionDataArgs["weeklyPeriodId"];
+  monthlyPeriodId: BuyTicketAndStartGameInstructionDataArgs["monthlyPeriodId"];
+  authorizedSessionKey: BuyTicketAndStartGameInstructionDataArgs["authorizedSessionKey"];
 };
 
 export async function getBuyTicketAndStartGameInstructionAsync<
@@ -208,6 +256,9 @@ export async function getBuyTicketAndStartGameInstructionAsync<
   TAccountLuckyDrawVault extends string,
   TAccountPayoutVault extends string,
   TAccountPayerTokenAccount extends string,
+  TAccountDailyLeaderboard extends string,
+  TAccountWeeklyLeaderboard extends string,
+  TAccountMonthlyLeaderboard extends string,
   TAccountSystemProgram extends string,
   TAccountTokenProgram extends string,
   TAccountAssociatedTokenProgram extends string,
@@ -225,6 +276,9 @@ export async function getBuyTicketAndStartGameInstructionAsync<
     TAccountLuckyDrawVault,
     TAccountPayoutVault,
     TAccountPayerTokenAccount,
+    TAccountDailyLeaderboard,
+    TAccountWeeklyLeaderboard,
+    TAccountMonthlyLeaderboard,
     TAccountSystemProgram,
     TAccountTokenProgram,
     TAccountAssociatedTokenProgram
@@ -244,6 +298,9 @@ export async function getBuyTicketAndStartGameInstructionAsync<
     TAccountLuckyDrawVault,
     TAccountPayoutVault,
     TAccountPayerTokenAccount,
+    TAccountDailyLeaderboard,
+    TAccountWeeklyLeaderboard,
+    TAccountMonthlyLeaderboard,
     TAccountSystemProgram,
     TAccountTokenProgram,
     TAccountAssociatedTokenProgram
@@ -272,6 +329,18 @@ export async function getBuyTicketAndStartGameInstructionAsync<
     payoutVault: { value: input.payoutVault ?? null, isWritable: true },
     payerTokenAccount: {
       value: input.payerTokenAccount ?? null,
+      isWritable: true,
+    },
+    dailyLeaderboard: {
+      value: input.dailyLeaderboard ?? null,
+      isWritable: true,
+    },
+    weeklyLeaderboard: {
+      value: input.weeklyLeaderboard ?? null,
+      isWritable: true,
+    },
+    monthlyLeaderboard: {
+      value: input.monthlyLeaderboard ?? null,
       isWritable: true,
     },
     systemProgram: { value: input.systemProgram ?? null, isWritable: false },
@@ -418,6 +487,9 @@ export async function getBuyTicketAndStartGameInstructionAsync<
       getAccountMeta(accounts.luckyDrawVault),
       getAccountMeta(accounts.payoutVault),
       getAccountMeta(accounts.payerTokenAccount),
+      getAccountMeta(accounts.dailyLeaderboard),
+      getAccountMeta(accounts.weeklyLeaderboard),
+      getAccountMeta(accounts.monthlyLeaderboard),
       getAccountMeta(accounts.systemProgram),
       getAccountMeta(accounts.tokenProgram),
       getAccountMeta(accounts.associatedTokenProgram),
@@ -439,6 +511,9 @@ export async function getBuyTicketAndStartGameInstructionAsync<
     TAccountLuckyDrawVault,
     TAccountPayoutVault,
     TAccountPayerTokenAccount,
+    TAccountDailyLeaderboard,
+    TAccountWeeklyLeaderboard,
+    TAccountMonthlyLeaderboard,
     TAccountSystemProgram,
     TAccountTokenProgram,
     TAccountAssociatedTokenProgram
@@ -457,6 +532,9 @@ export type BuyTicketAndStartGameInput<
   TAccountLuckyDrawVault extends string = string,
   TAccountPayoutVault extends string = string,
   TAccountPayerTokenAccount extends string = string,
+  TAccountDailyLeaderboard extends string = string,
+  TAccountWeeklyLeaderboard extends string = string,
+  TAccountMonthlyLeaderboard extends string = string,
   TAccountSystemProgram extends string = string,
   TAccountTokenProgram extends string = string,
   TAccountAssociatedTokenProgram extends string = string,
@@ -472,10 +550,16 @@ export type BuyTicketAndStartGameInput<
   luckyDrawVault: Address<TAccountLuckyDrawVault>;
   payoutVault: Address<TAccountPayoutVault>;
   payerTokenAccount: Address<TAccountPayerTokenAccount>;
+  dailyLeaderboard: Address<TAccountDailyLeaderboard>;
+  weeklyLeaderboard: Address<TAccountWeeklyLeaderboard>;
+  monthlyLeaderboard: Address<TAccountMonthlyLeaderboard>;
   systemProgram?: Address<TAccountSystemProgram>;
   tokenProgram?: Address<TAccountTokenProgram>;
   associatedTokenProgram?: Address<TAccountAssociatedTokenProgram>;
-  periodId: BuyTicketAndStartGameInstructionDataArgs["periodId"];
+  dailyPeriodId: BuyTicketAndStartGameInstructionDataArgs["dailyPeriodId"];
+  weeklyPeriodId: BuyTicketAndStartGameInstructionDataArgs["weeklyPeriodId"];
+  monthlyPeriodId: BuyTicketAndStartGameInstructionDataArgs["monthlyPeriodId"];
+  authorizedSessionKey: BuyTicketAndStartGameInstructionDataArgs["authorizedSessionKey"];
 };
 
 export function getBuyTicketAndStartGameInstruction<
@@ -490,6 +574,9 @@ export function getBuyTicketAndStartGameInstruction<
   TAccountLuckyDrawVault extends string,
   TAccountPayoutVault extends string,
   TAccountPayerTokenAccount extends string,
+  TAccountDailyLeaderboard extends string,
+  TAccountWeeklyLeaderboard extends string,
+  TAccountMonthlyLeaderboard extends string,
   TAccountSystemProgram extends string,
   TAccountTokenProgram extends string,
   TAccountAssociatedTokenProgram extends string,
@@ -507,6 +594,9 @@ export function getBuyTicketAndStartGameInstruction<
     TAccountLuckyDrawVault,
     TAccountPayoutVault,
     TAccountPayerTokenAccount,
+    TAccountDailyLeaderboard,
+    TAccountWeeklyLeaderboard,
+    TAccountMonthlyLeaderboard,
     TAccountSystemProgram,
     TAccountTokenProgram,
     TAccountAssociatedTokenProgram
@@ -525,6 +615,9 @@ export function getBuyTicketAndStartGameInstruction<
   TAccountLuckyDrawVault,
   TAccountPayoutVault,
   TAccountPayerTokenAccount,
+  TAccountDailyLeaderboard,
+  TAccountWeeklyLeaderboard,
+  TAccountMonthlyLeaderboard,
   TAccountSystemProgram,
   TAccountTokenProgram,
   TAccountAssociatedTokenProgram
@@ -552,6 +645,18 @@ export function getBuyTicketAndStartGameInstruction<
     payoutVault: { value: input.payoutVault ?? null, isWritable: true },
     payerTokenAccount: {
       value: input.payerTokenAccount ?? null,
+      isWritable: true,
+    },
+    dailyLeaderboard: {
+      value: input.dailyLeaderboard ?? null,
+      isWritable: true,
+    },
+    weeklyLeaderboard: {
+      value: input.weeklyLeaderboard ?? null,
+      isWritable: true,
+    },
+    monthlyLeaderboard: {
+      value: input.monthlyLeaderboard ?? null,
       isWritable: true,
     },
     systemProgram: { value: input.systemProgram ?? null, isWritable: false },
@@ -597,6 +702,9 @@ export function getBuyTicketAndStartGameInstruction<
       getAccountMeta(accounts.luckyDrawVault),
       getAccountMeta(accounts.payoutVault),
       getAccountMeta(accounts.payerTokenAccount),
+      getAccountMeta(accounts.dailyLeaderboard),
+      getAccountMeta(accounts.weeklyLeaderboard),
+      getAccountMeta(accounts.monthlyLeaderboard),
       getAccountMeta(accounts.systemProgram),
       getAccountMeta(accounts.tokenProgram),
       getAccountMeta(accounts.associatedTokenProgram),
@@ -618,6 +726,9 @@ export function getBuyTicketAndStartGameInstruction<
     TAccountLuckyDrawVault,
     TAccountPayoutVault,
     TAccountPayerTokenAccount,
+    TAccountDailyLeaderboard,
+    TAccountWeeklyLeaderboard,
+    TAccountMonthlyLeaderboard,
     TAccountSystemProgram,
     TAccountTokenProgram,
     TAccountAssociatedTokenProgram
@@ -641,9 +752,12 @@ export type ParsedBuyTicketAndStartGameInstruction<
     luckyDrawVault: TAccountMetas[8];
     payoutVault: TAccountMetas[9];
     payerTokenAccount: TAccountMetas[10];
-    systemProgram: TAccountMetas[11];
-    tokenProgram: TAccountMetas[12];
-    associatedTokenProgram: TAccountMetas[13];
+    dailyLeaderboard: TAccountMetas[11];
+    weeklyLeaderboard: TAccountMetas[12];
+    monthlyLeaderboard: TAccountMetas[13];
+    systemProgram: TAccountMetas[14];
+    tokenProgram: TAccountMetas[15];
+    associatedTokenProgram: TAccountMetas[16];
   };
   data: BuyTicketAndStartGameInstructionData;
 };
@@ -656,7 +770,7 @@ export function parseBuyTicketAndStartGameInstruction<
     InstructionWithAccounts<TAccountMetas> &
     InstructionWithData<ReadonlyUint8Array>,
 ): ParsedBuyTicketAndStartGameInstruction<TProgram, TAccountMetas> {
-  if (instruction.accounts.length < 14) {
+  if (instruction.accounts.length < 17) {
     // TODO: Coded error.
     throw new Error("Not enough accounts");
   }
@@ -680,6 +794,9 @@ export function parseBuyTicketAndStartGameInstruction<
       luckyDrawVault: getNextAccount(),
       payoutVault: getNextAccount(),
       payerTokenAccount: getNextAccount(),
+      dailyLeaderboard: getNextAccount(),
+      weeklyLeaderboard: getNextAccount(),
+      monthlyLeaderboard: getNextAccount(),
       systemProgram: getNextAccount(),
       tokenProgram: getNextAccount(),
       associatedTokenProgram: getNextAccount(),

@@ -7,25 +7,20 @@
  */
 
 export * from "./activityPointsTraded";
-export * from "./gameSessionStarted";
 export * from "./globalConfigInitialized";
 export * from "./guessData";
 export * from "./guessSubmitted";
 export * from "./leaderboardFinalized";
 export * from "./leaderboardInitialized";
-export * from "./leaderboardUpdated";
 export * from "./leaderEntry";
 export * from "./letterResult";
 export * from "./luckyDrawWinner";
 export * from "./periodFinalized";
-export * from "./periodFinalizedWithWinners";
 export * from "./periodType";
 export * from "./platformRevenueWithdrawn";
 export * from "./prizeClaimed";
 export * from "./referralPayoutSent";
-export * from "./ticketPurchased";
 export * from "./userProfileCreated";
 export * from "./vaultsInitialized";
 export * from "./vobleGameCompleted";
-export * from "./vobleGameStarted";
 export * from "./winnerDetermined";

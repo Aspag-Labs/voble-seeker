@@ -10,6 +10,8 @@ import {
   combineCodec,
   fixDecoderSize,
   fixEncoderSize,
+  getAddressDecoder,
+  getAddressEncoder,
   getArrayDecoder,
   getArrayEncoder,
   getBooleanDecoder,
@@ -85,6 +87,7 @@ export type SetConfigInstructionData = {
   winnerSplitsDaily: Option<Array<number>>;
   winnerSplitsWeekly: Option<Array<number>>;
   winnerSplitsMonthly: Option<Array<number>>;
+  cronAuthority: Option<Address>;
 };
 
 export type SetConfigInstructionDataArgs = {
@@ -98,6 +101,7 @@ export type SetConfigInstructionDataArgs = {
   winnerSplitsDaily: OptionOrNullable<Array<number>>;
   winnerSplitsWeekly: OptionOrNullable<Array<number>>;
   winnerSplitsMonthly: OptionOrNullable<Array<number>>;
+  cronAuthority: OptionOrNullable<Address>;
 };
 
 export function getSetConfigInstructionDataEncoder(): Encoder<SetConfigInstructionDataArgs> {
@@ -120,6 +124,7 @@ export function getSetConfigInstructionDataEncoder(): Encoder<SetConfigInstructi
         "winnerSplitsMonthly",
         getOptionEncoder(getArrayEncoder(getU16Encoder())),
       ],
+      ["cronAuthority", getOptionEncoder(getAddressEncoder())],
     ]),
     (value) => ({ ...value, discriminator: SET_CONFIG_DISCRIMINATOR }),
   );
@@ -138,6 +143,7 @@ export function getSetConfigInstructionDataDecoder(): Decoder<SetConfigInstructi
     ["winnerSplitsDaily", getOptionDecoder(getArrayDecoder(getU16Decoder()))],
     ["winnerSplitsWeekly", getOptionDecoder(getArrayDecoder(getU16Decoder()))],
     ["winnerSplitsMonthly", getOptionDecoder(getArrayDecoder(getU16Decoder()))],
+    ["cronAuthority", getOptionDecoder(getAddressDecoder())],
   ]);
 }
 
@@ -167,6 +173,7 @@ export type SetConfigAsyncInput<
   winnerSplitsDaily: SetConfigInstructionDataArgs["winnerSplitsDaily"];
   winnerSplitsWeekly: SetConfigInstructionDataArgs["winnerSplitsWeekly"];
   winnerSplitsMonthly: SetConfigInstructionDataArgs["winnerSplitsMonthly"];
+  cronAuthority: SetConfigInstructionDataArgs["cronAuthority"];
 };
 
 export async function getSetConfigInstructionAsync<
@@ -242,6 +249,7 @@ export type SetConfigInput<
   winnerSplitsDaily: SetConfigInstructionDataArgs["winnerSplitsDaily"];
   winnerSplitsWeekly: SetConfigInstructionDataArgs["winnerSplitsWeekly"];
   winnerSplitsMonthly: SetConfigInstructionDataArgs["winnerSplitsMonthly"];
+  cronAuthority: SetConfigInstructionDataArgs["cronAuthority"];
 };
 
 export function getSetConfigInstruction<

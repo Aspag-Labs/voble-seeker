@@ -56,6 +56,7 @@ export function getGlobalConfigDiscriminatorBytes() {
 export type GlobalConfig = {
   discriminator: ReadonlyUint8Array;
   authority: Address;
+  cronAuthority: Address;
   ticketPrice: bigint;
   prizeSplitDaily: number;
   prizeSplitWeekly: number;
@@ -74,6 +75,7 @@ export type GlobalConfig = {
 
 export type GlobalConfigArgs = {
   authority: Address;
+  cronAuthority: Address;
   ticketPrice: number | bigint;
   prizeSplitDaily: number;
   prizeSplitWeekly: number;
@@ -96,6 +98,7 @@ export function getGlobalConfigEncoder(): Encoder<GlobalConfigArgs> {
     getStructEncoder([
       ["discriminator", fixEncoderSize(getBytesEncoder(), 8)],
       ["authority", getAddressEncoder()],
+      ["cronAuthority", getAddressEncoder()],
       ["ticketPrice", getU64Encoder()],
       ["prizeSplitDaily", getU16Encoder()],
       ["prizeSplitWeekly", getU16Encoder()],
@@ -120,6 +123,7 @@ export function getGlobalConfigDecoder(): Decoder<GlobalConfig> {
   return getStructDecoder([
     ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
     ["authority", getAddressDecoder()],
+    ["cronAuthority", getAddressDecoder()],
     ["ticketPrice", getU64Decoder()],
     ["prizeSplitDaily", getU16Decoder()],
     ["prizeSplitWeekly", getU16Decoder()],

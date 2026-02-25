@@ -56,7 +56,8 @@ export type CreateTargetWordPermissionInstruction<
   TAccountPlayer extends string | AccountMeta<string> = string,
   TAccountTargetWord extends string | AccountMeta<string> = string,
   TAccountPermission extends string | AccountMeta<string> = string,
-  TAccountPermissionProgram extends string | AccountMeta<string> = string,
+  TAccountPermissionProgram extends string | AccountMeta<string> =
+    "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1",
   TAccountSystemProgram extends string | AccountMeta<string> =
     "11111111111111111111111111111111",
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
@@ -134,7 +135,7 @@ export type CreateTargetWordPermissionAsyncInput<
   /** The target word account to protect */
   targetWord?: Address<TAccountTargetWord>;
   permission: Address<TAccountPermission>;
-  permissionProgram: Address<TAccountPermissionProgram>;
+  permissionProgram?: Address<TAccountPermissionProgram>;
   systemProgram?: Address<TAccountSystemProgram>;
 };
 
@@ -199,6 +200,10 @@ export async function getCreateTargetWordPermissionInstructionAsync<
       ],
     });
   }
+  if (!accounts.permissionProgram.value) {
+    accounts.permissionProgram.value =
+      "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1" as Address<"ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1">;
+  }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
       "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
@@ -241,7 +246,7 @@ export type CreateTargetWordPermissionInput<
   /** The target word account to protect */
   targetWord: Address<TAccountTargetWord>;
   permission: Address<TAccountPermission>;
-  permissionProgram: Address<TAccountPermissionProgram>;
+  permissionProgram?: Address<TAccountPermissionProgram>;
   systemProgram?: Address<TAccountSystemProgram>;
 };
 
@@ -293,6 +298,10 @@ export function getCreateTargetWordPermissionInstruction<
   >;
 
   // Resolve default values.
+  if (!accounts.permissionProgram.value) {
+    accounts.permissionProgram.value =
+      "ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1" as Address<"ACLseoPoyC3cBqoUtkbjZ4aDrkurZW86v19pXz2XQnp1">;
+  }
   if (!accounts.systemProgram.value) {
     accounts.systemProgram.value =
       "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;

@@ -63,6 +63,7 @@ export type ClaimLuckyDrawPrizeInstruction<
   TAccountPayer extends string | AccountMeta<string> = string,
   TAccountLuckyDrawState extends string | AccountMeta<string> = string,
   TAccountParticipantsRoot extends string | AccountMeta<string> = string,
+  TAccountWeeklyLeaderboard extends string | AccountMeta<string> = string,
   TAccountUserProfile extends string | AccountMeta<string> = string,
   TAccountGlobalConfig extends string | AccountMeta<string> = string,
   TAccountLuckyDrawVault extends string | AccountMeta<string> = string,
@@ -71,6 +72,10 @@ export type ClaimLuckyDrawPrizeInstruction<
   TAccountUsdcMint extends string | AccountMeta<string> = string,
   TAccountTokenProgram extends string | AccountMeta<string> =
     "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+  TAccountAssociatedTokenProgram extends string | AccountMeta<string> =
+    "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
+  TAccountSystemProgram extends string | AccountMeta<string> =
+    "11111111111111111111111111111111",
   TAccountEventAuthority extends string | AccountMeta<string> = string,
   TAccountProgram extends string | AccountMeta<string> = string,
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
@@ -88,6 +93,9 @@ export type ClaimLuckyDrawPrizeInstruction<
       TAccountParticipantsRoot extends string
         ? ReadonlyAccount<TAccountParticipantsRoot>
         : TAccountParticipantsRoot,
+      TAccountWeeklyLeaderboard extends string
+        ? ReadonlyAccount<TAccountWeeklyLeaderboard>
+        : TAccountWeeklyLeaderboard,
       TAccountUserProfile extends string
         ? WritableAccount<TAccountUserProfile>
         : TAccountUserProfile,
@@ -109,6 +117,12 @@ export type ClaimLuckyDrawPrizeInstruction<
       TAccountTokenProgram extends string
         ? ReadonlyAccount<TAccountTokenProgram>
         : TAccountTokenProgram,
+      TAccountAssociatedTokenProgram extends string
+        ? ReadonlyAccount<TAccountAssociatedTokenProgram>
+        : TAccountAssociatedTokenProgram,
+      TAccountSystemProgram extends string
+        ? ReadonlyAccount<TAccountSystemProgram>
+        : TAccountSystemProgram,
       TAccountEventAuthority extends string
         ? ReadonlyAccount<TAccountEventAuthority>
         : TAccountEventAuthority,
@@ -166,6 +180,7 @@ export type ClaimLuckyDrawPrizeAsyncInput<
   TAccountPayer extends string = string,
   TAccountLuckyDrawState extends string = string,
   TAccountParticipantsRoot extends string = string,
+  TAccountWeeklyLeaderboard extends string = string,
   TAccountUserProfile extends string = string,
   TAccountGlobalConfig extends string = string,
   TAccountLuckyDrawVault extends string = string,
@@ -173,6 +188,8 @@ export type ClaimLuckyDrawPrizeAsyncInput<
   TAccountWinnerAta extends string = string,
   TAccountUsdcMint extends string = string,
   TAccountTokenProgram extends string = string,
+  TAccountAssociatedTokenProgram extends string = string,
+  TAccountSystemProgram extends string = string,
   TAccountEventAuthority extends string = string,
   TAccountProgram extends string = string,
 > = {
@@ -180,6 +197,8 @@ export type ClaimLuckyDrawPrizeAsyncInput<
   luckyDrawState?: Address<TAccountLuckyDrawState>;
   /** Merkle root for verifying winner's position in candidates list */
   participantsRoot?: Address<TAccountParticipantsRoot>;
+  /** Weekly leaderboard for vault isolation (H-2 fix) */
+  weeklyLeaderboard: Address<TAccountWeeklyLeaderboard>;
   userProfile?: Address<TAccountUserProfile>;
   globalConfig?: Address<TAccountGlobalConfig>;
   /** Lucky draw vault - source of prize funds */
@@ -188,6 +207,8 @@ export type ClaimLuckyDrawPrizeAsyncInput<
   winnerAta?: Address<TAccountWinnerAta>;
   usdcMint: Address<TAccountUsdcMint>;
   tokenProgram?: Address<TAccountTokenProgram>;
+  associatedTokenProgram?: Address<TAccountAssociatedTokenProgram>;
+  systemProgram?: Address<TAccountSystemProgram>;
   eventAuthority?: Address<TAccountEventAuthority>;
   program: Address<TAccountProgram>;
   periodId: ClaimLuckyDrawPrizeInstructionDataArgs["periodId"];
@@ -198,6 +219,7 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
   TAccountPayer extends string,
   TAccountLuckyDrawState extends string,
   TAccountParticipantsRoot extends string,
+  TAccountWeeklyLeaderboard extends string,
   TAccountUserProfile extends string,
   TAccountGlobalConfig extends string,
   TAccountLuckyDrawVault extends string,
@@ -205,6 +227,8 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
   TAccountWinnerAta extends string,
   TAccountUsdcMint extends string,
   TAccountTokenProgram extends string,
+  TAccountAssociatedTokenProgram extends string,
+  TAccountSystemProgram extends string,
   TAccountEventAuthority extends string,
   TAccountProgram extends string,
   TProgramAddress extends Address = typeof VOBLE_PROGRAM_ADDRESS,
@@ -213,6 +237,7 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
     TAccountPayer,
     TAccountLuckyDrawState,
     TAccountParticipantsRoot,
+    TAccountWeeklyLeaderboard,
     TAccountUserProfile,
     TAccountGlobalConfig,
     TAccountLuckyDrawVault,
@@ -220,6 +245,8 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
     TAccountWinnerAta,
     TAccountUsdcMint,
     TAccountTokenProgram,
+    TAccountAssociatedTokenProgram,
+    TAccountSystemProgram,
     TAccountEventAuthority,
     TAccountProgram
   >,
@@ -230,6 +257,7 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
     TAccountPayer,
     TAccountLuckyDrawState,
     TAccountParticipantsRoot,
+    TAccountWeeklyLeaderboard,
     TAccountUserProfile,
     TAccountGlobalConfig,
     TAccountLuckyDrawVault,
@@ -237,6 +265,8 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
     TAccountWinnerAta,
     TAccountUsdcMint,
     TAccountTokenProgram,
+    TAccountAssociatedTokenProgram,
+    TAccountSystemProgram,
     TAccountEventAuthority,
     TAccountProgram
   >
@@ -252,6 +282,10 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
       value: input.participantsRoot ?? null,
       isWritable: false,
     },
+    weeklyLeaderboard: {
+      value: input.weeklyLeaderboard ?? null,
+      isWritable: false,
+    },
     userProfile: { value: input.userProfile ?? null, isWritable: true },
     globalConfig: { value: input.globalConfig ?? null, isWritable: true },
     luckyDrawVault: { value: input.luckyDrawVault ?? null, isWritable: true },
@@ -259,6 +293,11 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
     winnerAta: { value: input.winnerAta ?? null, isWritable: true },
     usdcMint: { value: input.usdcMint ?? null, isWritable: false },
     tokenProgram: { value: input.tokenProgram ?? null, isWritable: false },
+    associatedTokenProgram: {
+      value: input.associatedTokenProgram ?? null,
+      isWritable: false,
+    },
+    systemProgram: { value: input.systemProgram ?? null, isWritable: false },
     eventAuthority: { value: input.eventAuthority ?? null, isWritable: false },
     program: { value: input.program ?? null, isWritable: false },
   };
@@ -334,26 +373,28 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
       ],
     });
   }
+  if (!accounts.tokenProgram.value) {
+    accounts.tokenProgram.value =
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" as Address<"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA">;
+  }
   if (!accounts.winnerAta.value) {
     accounts.winnerAta.value = await getProgramDerivedAddress({
       programAddress:
         "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL" as Address<"ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL">,
       seeds: [
         getAddressEncoder().encode(expectAddress(accounts.winner.value)),
-        getBytesEncoder().encode(
-          new Uint8Array([
-            6, 221, 246, 225, 215, 101, 161, 147, 217, 203, 225, 70, 206, 235,
-            121, 172, 28, 180, 133, 237, 95, 91, 55, 145, 58, 140, 245, 133,
-            126, 255, 0, 169,
-          ]),
-        ),
+        getAddressEncoder().encode(expectAddress(accounts.tokenProgram.value)),
         getAddressEncoder().encode(expectAddress(accounts.usdcMint.value)),
       ],
     });
   }
-  if (!accounts.tokenProgram.value) {
-    accounts.tokenProgram.value =
-      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" as Address<"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA">;
+  if (!accounts.associatedTokenProgram.value) {
+    accounts.associatedTokenProgram.value =
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL" as Address<"ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL">;
+  }
+  if (!accounts.systemProgram.value) {
+    accounts.systemProgram.value =
+      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
   }
   if (!accounts.eventAuthority.value) {
     accounts.eventAuthority.value = await getProgramDerivedAddress({
@@ -375,6 +416,7 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
       getAccountMeta(accounts.payer),
       getAccountMeta(accounts.luckyDrawState),
       getAccountMeta(accounts.participantsRoot),
+      getAccountMeta(accounts.weeklyLeaderboard),
       getAccountMeta(accounts.userProfile),
       getAccountMeta(accounts.globalConfig),
       getAccountMeta(accounts.luckyDrawVault),
@@ -382,6 +424,8 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
       getAccountMeta(accounts.winnerAta),
       getAccountMeta(accounts.usdcMint),
       getAccountMeta(accounts.tokenProgram),
+      getAccountMeta(accounts.associatedTokenProgram),
+      getAccountMeta(accounts.systemProgram),
       getAccountMeta(accounts.eventAuthority),
       getAccountMeta(accounts.program),
     ],
@@ -394,6 +438,7 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
     TAccountPayer,
     TAccountLuckyDrawState,
     TAccountParticipantsRoot,
+    TAccountWeeklyLeaderboard,
     TAccountUserProfile,
     TAccountGlobalConfig,
     TAccountLuckyDrawVault,
@@ -401,6 +446,8 @@ export async function getClaimLuckyDrawPrizeInstructionAsync<
     TAccountWinnerAta,
     TAccountUsdcMint,
     TAccountTokenProgram,
+    TAccountAssociatedTokenProgram,
+    TAccountSystemProgram,
     TAccountEventAuthority,
     TAccountProgram
   >);
@@ -410,6 +457,7 @@ export type ClaimLuckyDrawPrizeInput<
   TAccountPayer extends string = string,
   TAccountLuckyDrawState extends string = string,
   TAccountParticipantsRoot extends string = string,
+  TAccountWeeklyLeaderboard extends string = string,
   TAccountUserProfile extends string = string,
   TAccountGlobalConfig extends string = string,
   TAccountLuckyDrawVault extends string = string,
@@ -417,6 +465,8 @@ export type ClaimLuckyDrawPrizeInput<
   TAccountWinnerAta extends string = string,
   TAccountUsdcMint extends string = string,
   TAccountTokenProgram extends string = string,
+  TAccountAssociatedTokenProgram extends string = string,
+  TAccountSystemProgram extends string = string,
   TAccountEventAuthority extends string = string,
   TAccountProgram extends string = string,
 > = {
@@ -424,6 +474,8 @@ export type ClaimLuckyDrawPrizeInput<
   luckyDrawState: Address<TAccountLuckyDrawState>;
   /** Merkle root for verifying winner's position in candidates list */
   participantsRoot: Address<TAccountParticipantsRoot>;
+  /** Weekly leaderboard for vault isolation (H-2 fix) */
+  weeklyLeaderboard: Address<TAccountWeeklyLeaderboard>;
   userProfile: Address<TAccountUserProfile>;
   globalConfig: Address<TAccountGlobalConfig>;
   /** Lucky draw vault - source of prize funds */
@@ -432,6 +484,8 @@ export type ClaimLuckyDrawPrizeInput<
   winnerAta: Address<TAccountWinnerAta>;
   usdcMint: Address<TAccountUsdcMint>;
   tokenProgram?: Address<TAccountTokenProgram>;
+  associatedTokenProgram?: Address<TAccountAssociatedTokenProgram>;
+  systemProgram?: Address<TAccountSystemProgram>;
   eventAuthority: Address<TAccountEventAuthority>;
   program: Address<TAccountProgram>;
   periodId: ClaimLuckyDrawPrizeInstructionDataArgs["periodId"];
@@ -442,6 +496,7 @@ export function getClaimLuckyDrawPrizeInstruction<
   TAccountPayer extends string,
   TAccountLuckyDrawState extends string,
   TAccountParticipantsRoot extends string,
+  TAccountWeeklyLeaderboard extends string,
   TAccountUserProfile extends string,
   TAccountGlobalConfig extends string,
   TAccountLuckyDrawVault extends string,
@@ -449,6 +504,8 @@ export function getClaimLuckyDrawPrizeInstruction<
   TAccountWinnerAta extends string,
   TAccountUsdcMint extends string,
   TAccountTokenProgram extends string,
+  TAccountAssociatedTokenProgram extends string,
+  TAccountSystemProgram extends string,
   TAccountEventAuthority extends string,
   TAccountProgram extends string,
   TProgramAddress extends Address = typeof VOBLE_PROGRAM_ADDRESS,
@@ -457,6 +514,7 @@ export function getClaimLuckyDrawPrizeInstruction<
     TAccountPayer,
     TAccountLuckyDrawState,
     TAccountParticipantsRoot,
+    TAccountWeeklyLeaderboard,
     TAccountUserProfile,
     TAccountGlobalConfig,
     TAccountLuckyDrawVault,
@@ -464,6 +522,8 @@ export function getClaimLuckyDrawPrizeInstruction<
     TAccountWinnerAta,
     TAccountUsdcMint,
     TAccountTokenProgram,
+    TAccountAssociatedTokenProgram,
+    TAccountSystemProgram,
     TAccountEventAuthority,
     TAccountProgram
   >,
@@ -473,6 +533,7 @@ export function getClaimLuckyDrawPrizeInstruction<
   TAccountPayer,
   TAccountLuckyDrawState,
   TAccountParticipantsRoot,
+  TAccountWeeklyLeaderboard,
   TAccountUserProfile,
   TAccountGlobalConfig,
   TAccountLuckyDrawVault,
@@ -480,6 +541,8 @@ export function getClaimLuckyDrawPrizeInstruction<
   TAccountWinnerAta,
   TAccountUsdcMint,
   TAccountTokenProgram,
+  TAccountAssociatedTokenProgram,
+  TAccountSystemProgram,
   TAccountEventAuthority,
   TAccountProgram
 > {
@@ -494,6 +557,10 @@ export function getClaimLuckyDrawPrizeInstruction<
       value: input.participantsRoot ?? null,
       isWritable: false,
     },
+    weeklyLeaderboard: {
+      value: input.weeklyLeaderboard ?? null,
+      isWritable: false,
+    },
     userProfile: { value: input.userProfile ?? null, isWritable: true },
     globalConfig: { value: input.globalConfig ?? null, isWritable: true },
     luckyDrawVault: { value: input.luckyDrawVault ?? null, isWritable: true },
@@ -501,6 +568,11 @@ export function getClaimLuckyDrawPrizeInstruction<
     winnerAta: { value: input.winnerAta ?? null, isWritable: true },
     usdcMint: { value: input.usdcMint ?? null, isWritable: false },
     tokenProgram: { value: input.tokenProgram ?? null, isWritable: false },
+    associatedTokenProgram: {
+      value: input.associatedTokenProgram ?? null,
+      isWritable: false,
+    },
+    systemProgram: { value: input.systemProgram ?? null, isWritable: false },
     eventAuthority: { value: input.eventAuthority ?? null, isWritable: false },
     program: { value: input.program ?? null, isWritable: false },
   };
@@ -517,6 +589,14 @@ export function getClaimLuckyDrawPrizeInstruction<
     accounts.tokenProgram.value =
       "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" as Address<"TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA">;
   }
+  if (!accounts.associatedTokenProgram.value) {
+    accounts.associatedTokenProgram.value =
+      "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL" as Address<"ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL">;
+  }
+  if (!accounts.systemProgram.value) {
+    accounts.systemProgram.value =
+      "11111111111111111111111111111111" as Address<"11111111111111111111111111111111">;
+  }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
@@ -524,6 +604,7 @@ export function getClaimLuckyDrawPrizeInstruction<
       getAccountMeta(accounts.payer),
       getAccountMeta(accounts.luckyDrawState),
       getAccountMeta(accounts.participantsRoot),
+      getAccountMeta(accounts.weeklyLeaderboard),
       getAccountMeta(accounts.userProfile),
       getAccountMeta(accounts.globalConfig),
       getAccountMeta(accounts.luckyDrawVault),
@@ -531,6 +612,8 @@ export function getClaimLuckyDrawPrizeInstruction<
       getAccountMeta(accounts.winnerAta),
       getAccountMeta(accounts.usdcMint),
       getAccountMeta(accounts.tokenProgram),
+      getAccountMeta(accounts.associatedTokenProgram),
+      getAccountMeta(accounts.systemProgram),
       getAccountMeta(accounts.eventAuthority),
       getAccountMeta(accounts.program),
     ],
@@ -543,6 +626,7 @@ export function getClaimLuckyDrawPrizeInstruction<
     TAccountPayer,
     TAccountLuckyDrawState,
     TAccountParticipantsRoot,
+    TAccountWeeklyLeaderboard,
     TAccountUserProfile,
     TAccountGlobalConfig,
     TAccountLuckyDrawVault,
@@ -550,6 +634,8 @@ export function getClaimLuckyDrawPrizeInstruction<
     TAccountWinnerAta,
     TAccountUsdcMint,
     TAccountTokenProgram,
+    TAccountAssociatedTokenProgram,
+    TAccountSystemProgram,
     TAccountEventAuthority,
     TAccountProgram
   >);
@@ -565,16 +651,20 @@ export type ParsedClaimLuckyDrawPrizeInstruction<
     luckyDrawState: TAccountMetas[1];
     /** Merkle root for verifying winner's position in candidates list */
     participantsRoot: TAccountMetas[2];
-    userProfile: TAccountMetas[3];
-    globalConfig: TAccountMetas[4];
+    /** Weekly leaderboard for vault isolation (H-2 fix) */
+    weeklyLeaderboard: TAccountMetas[3];
+    userProfile: TAccountMetas[4];
+    globalConfig: TAccountMetas[5];
     /** Lucky draw vault - source of prize funds */
-    luckyDrawVault: TAccountMetas[5];
-    winner: TAccountMetas[6];
-    winnerAta: TAccountMetas[7];
-    usdcMint: TAccountMetas[8];
-    tokenProgram: TAccountMetas[9];
-    eventAuthority: TAccountMetas[10];
-    program: TAccountMetas[11];
+    luckyDrawVault: TAccountMetas[6];
+    winner: TAccountMetas[7];
+    winnerAta: TAccountMetas[8];
+    usdcMint: TAccountMetas[9];
+    tokenProgram: TAccountMetas[10];
+    associatedTokenProgram: TAccountMetas[11];
+    systemProgram: TAccountMetas[12];
+    eventAuthority: TAccountMetas[13];
+    program: TAccountMetas[14];
   };
   data: ClaimLuckyDrawPrizeInstructionData;
 };
@@ -587,7 +677,7 @@ export function parseClaimLuckyDrawPrizeInstruction<
     InstructionWithAccounts<TAccountMetas> &
     InstructionWithData<ReadonlyUint8Array>,
 ): ParsedClaimLuckyDrawPrizeInstruction<TProgram, TAccountMetas> {
-  if (instruction.accounts.length < 12) {
+  if (instruction.accounts.length < 15) {
     // TODO: Coded error.
     throw new Error("Not enough accounts");
   }
@@ -603,6 +693,7 @@ export function parseClaimLuckyDrawPrizeInstruction<
       payer: getNextAccount(),
       luckyDrawState: getNextAccount(),
       participantsRoot: getNextAccount(),
+      weeklyLeaderboard: getNextAccount(),
       userProfile: getNextAccount(),
       globalConfig: getNextAccount(),
       luckyDrawVault: getNextAccount(),
@@ -610,6 +701,8 @@ export function parseClaimLuckyDrawPrizeInstruction<
       winnerAta: getNextAccount(),
       usdcMint: getNextAccount(),
       tokenProgram: getNextAccount(),
+      associatedTokenProgram: getNextAccount(),
+      systemProgram: getNextAccount(),
       eventAuthority: getNextAccount(),
       program: getNextAccount(),
     },

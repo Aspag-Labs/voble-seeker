@@ -7,6 +7,8 @@
  */
 
 import {
+  addDecoderSizePrefix,
+  addEncoderSizePrefix,
   combineCodec,
   fixDecoderSize,
   fixEncoderSize,
@@ -15,12 +17,16 @@ import {
   getProgramDerivedAddress,
   getStructDecoder,
   getStructEncoder,
+  getU32Decoder,
+  getU32Encoder,
+  getUtf8Decoder,
+  getUtf8Encoder,
   transformEncoder,
   type AccountMeta,
   type Address,
-  type FixedSizeCodec,
-  type FixedSizeDecoder,
-  type FixedSizeEncoder,
+  type Codec,
+  type Decoder,
+  type Encoder,
   type Instruction,
   type InstructionWithAccounts,
   type InstructionWithData,
@@ -90,24 +96,51 @@ export type UpdatePlayerStatsInstruction<
 
 export type UpdatePlayerStatsInstructionData = {
   discriminator: ReadonlyUint8Array;
+  dailyPeriodId: string;
+  weeklyPeriodId: string;
+  monthlyPeriodId: string;
 };
 
-export type UpdatePlayerStatsInstructionDataArgs = {};
+export type UpdatePlayerStatsInstructionDataArgs = {
+  dailyPeriodId: string;
+  weeklyPeriodId: string;
+  monthlyPeriodId: string;
+};
 
-export function getUpdatePlayerStatsInstructionDataEncoder(): FixedSizeEncoder<UpdatePlayerStatsInstructionDataArgs> {
+export function getUpdatePlayerStatsInstructionDataEncoder(): Encoder<UpdatePlayerStatsInstructionDataArgs> {
   return transformEncoder(
-    getStructEncoder([["discriminator", fixEncoderSize(getBytesEncoder(), 8)]]),
+    getStructEncoder([
+      ["discriminator", fixEncoderSize(getBytesEncoder(), 8)],
+      [
+        "dailyPeriodId",
+        addEncoderSizePrefix(getUtf8Encoder(), getU32Encoder()),
+      ],
+      [
+        "weeklyPeriodId",
+        addEncoderSizePrefix(getUtf8Encoder(), getU32Encoder()),
+      ],
+      [
+        "monthlyPeriodId",
+        addEncoderSizePrefix(getUtf8Encoder(), getU32Encoder()),
+      ],
+    ]),
     (value) => ({ ...value, discriminator: UPDATE_PLAYER_STATS_DISCRIMINATOR }),
   );
 }
 
-export function getUpdatePlayerStatsInstructionDataDecoder(): FixedSizeDecoder<UpdatePlayerStatsInstructionData> {
+export function getUpdatePlayerStatsInstructionDataDecoder(): Decoder<UpdatePlayerStatsInstructionData> {
   return getStructDecoder([
     ["discriminator", fixDecoderSize(getBytesDecoder(), 8)],
+    ["dailyPeriodId", addDecoderSizePrefix(getUtf8Decoder(), getU32Decoder())],
+    ["weeklyPeriodId", addDecoderSizePrefix(getUtf8Decoder(), getU32Decoder())],
+    [
+      "monthlyPeriodId",
+      addDecoderSizePrefix(getUtf8Decoder(), getU32Decoder()),
+    ],
   ]);
 }
 
-export function getUpdatePlayerStatsInstructionDataCodec(): FixedSizeCodec<
+export function getUpdatePlayerStatsInstructionDataCodec(): Codec<
   UpdatePlayerStatsInstructionDataArgs,
   UpdatePlayerStatsInstructionData
 > {
@@ -128,19 +161,22 @@ export type UpdatePlayerStatsAsyncInput<
   TAccountEscrowAuth extends string = string,
   TAccountEscrow extends string = string,
 > = {
-  /** Daily leaderboard to update - THIRD */
+  /** Daily leaderboard to update - PDA-verified */
   dailyLeaderboard: Address<TAccountDailyLeaderboard>;
-  /** Weekly leaderboard to update - FOURTH */
+  /** Weekly leaderboard to update - PDA-verified */
   weeklyLeaderboard: Address<TAccountWeeklyLeaderboard>;
-  /** Monthly leaderboard to update - FIFTH */
+  /** Monthly leaderboard to update - PDA-verified */
   monthlyLeaderboard: Address<TAccountMonthlyLeaderboard>;
-  /** User profile to update stats - SIXTH */
+  /** User profile to update stats */
   userProfile: Address<TAccountUserProfile>;
   committedSession: Address<TAccountCommittedSession>;
   eventAuthority?: Address<TAccountEventAuthority>;
   program: Address<TAccountProgram>;
   escrowAuth: Address<TAccountEscrowAuth>;
   escrow: Address<TAccountEscrow>;
+  dailyPeriodId: UpdatePlayerStatsInstructionDataArgs["dailyPeriodId"];
+  weeklyPeriodId: UpdatePlayerStatsInstructionDataArgs["weeklyPeriodId"];
+  monthlyPeriodId: UpdatePlayerStatsInstructionDataArgs["monthlyPeriodId"];
 };
 
 export async function getUpdatePlayerStatsInstructionAsync<
@@ -213,6 +249,9 @@ export async function getUpdatePlayerStatsInstructionAsync<
     ResolvedAccount
   >;
 
+  // Original args.
+  const args = { ...input };
+
   // Resolve default values.
   if (!accounts.eventAuthority.value) {
     accounts.eventAuthority.value = await getProgramDerivedAddress({
@@ -241,7 +280,9 @@ export async function getUpdatePlayerStatsInstructionAsync<
       getAccountMeta(accounts.escrowAuth),
       getAccountMeta(accounts.escrow),
     ],
-    data: getUpdatePlayerStatsInstructionDataEncoder().encode({}),
+    data: getUpdatePlayerStatsInstructionDataEncoder().encode(
+      args as UpdatePlayerStatsInstructionDataArgs,
+    ),
     programAddress,
   } as UpdatePlayerStatsInstruction<
     TProgramAddress,
@@ -268,19 +309,22 @@ export type UpdatePlayerStatsInput<
   TAccountEscrowAuth extends string = string,
   TAccountEscrow extends string = string,
 > = {
-  /** Daily leaderboard to update - THIRD */
+  /** Daily leaderboard to update - PDA-verified */
   dailyLeaderboard: Address<TAccountDailyLeaderboard>;
-  /** Weekly leaderboard to update - FOURTH */
+  /** Weekly leaderboard to update - PDA-verified */
   weeklyLeaderboard: Address<TAccountWeeklyLeaderboard>;
-  /** Monthly leaderboard to update - FIFTH */
+  /** Monthly leaderboard to update - PDA-verified */
   monthlyLeaderboard: Address<TAccountMonthlyLeaderboard>;
-  /** User profile to update stats - SIXTH */
+  /** User profile to update stats */
   userProfile: Address<TAccountUserProfile>;
   committedSession: Address<TAccountCommittedSession>;
   eventAuthority: Address<TAccountEventAuthority>;
   program: Address<TAccountProgram>;
   escrowAuth: Address<TAccountEscrowAuth>;
   escrow: Address<TAccountEscrow>;
+  dailyPeriodId: UpdatePlayerStatsInstructionDataArgs["dailyPeriodId"];
+  weeklyPeriodId: UpdatePlayerStatsInstructionDataArgs["weeklyPeriodId"];
+  monthlyPeriodId: UpdatePlayerStatsInstructionDataArgs["monthlyPeriodId"];
 };
 
 export function getUpdatePlayerStatsInstruction<
@@ -351,6 +395,9 @@ export function getUpdatePlayerStatsInstruction<
     ResolvedAccount
   >;
 
+  // Original args.
+  const args = { ...input };
+
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
@@ -364,7 +411,9 @@ export function getUpdatePlayerStatsInstruction<
       getAccountMeta(accounts.escrowAuth),
       getAccountMeta(accounts.escrow),
     ],
-    data: getUpdatePlayerStatsInstructionDataEncoder().encode({}),
+    data: getUpdatePlayerStatsInstructionDataEncoder().encode(
+      args as UpdatePlayerStatsInstructionDataArgs,
+    ),
     programAddress,
   } as UpdatePlayerStatsInstruction<
     TProgramAddress,
@@ -386,13 +435,13 @@ export type ParsedUpdatePlayerStatsInstruction<
 > = {
   programAddress: Address<TProgram>;
   accounts: {
-    /** Daily leaderboard to update - THIRD */
+    /** Daily leaderboard to update - PDA-verified */
     dailyLeaderboard: TAccountMetas[0];
-    /** Weekly leaderboard to update - FOURTH */
+    /** Weekly leaderboard to update - PDA-verified */
     weeklyLeaderboard: TAccountMetas[1];
-    /** Monthly leaderboard to update - FIFTH */
+    /** Monthly leaderboard to update - PDA-verified */
     monthlyLeaderboard: TAccountMetas[2];
-    /** User profile to update stats - SIXTH */
+    /** User profile to update stats */
     userProfile: TAccountMetas[3];
     committedSession: TAccountMetas[4];
     eventAuthority: TAccountMetas[5];

@@ -23,6 +23,7 @@ import {
   getUtf8Encoder,
   transformEncoder,
   type AccountMeta,
+  type AccountSignerMeta,
   type Address,
   type Codec,
   type Decoder,
@@ -32,7 +33,9 @@ import {
   type InstructionWithData,
   type ReadonlyAccount,
   type ReadonlyUint8Array,
+  type TransactionSigner,
   type WritableAccount,
+  type WritableSignerAccount,
 } from "@solana/kit";
 import { VOBLE_PROGRAM_ADDRESS } from "../programs";
 import { getAccountMetaFactory, type ResolvedAccount } from "../shared";
@@ -49,8 +52,10 @@ export function getSubmitGuessDiscriminatorBytes() {
 
 export type SubmitGuessInstruction<
   TProgram extends string = typeof VOBLE_PROGRAM_ADDRESS,
+  TAccountPayer extends string | AccountMeta<string> = string,
   TAccountSession extends string | AccountMeta<string> = string,
   TAccountTargetWord extends string | AccountMeta<string> = string,
+  TAccountUserProfile extends string | AccountMeta<string> = string,
   TAccountEventAuthority extends string | AccountMeta<string> = string,
   TAccountProgram extends string | AccountMeta<string> = string,
   TRemainingAccounts extends readonly AccountMeta<string>[] = [],
@@ -58,12 +63,19 @@ export type SubmitGuessInstruction<
   InstructionWithData<ReadonlyUint8Array> &
   InstructionWithAccounts<
     [
+      TAccountPayer extends string
+        ? WritableSignerAccount<TAccountPayer> &
+            AccountSignerMeta<TAccountPayer>
+        : TAccountPayer,
       TAccountSession extends string
         ? WritableAccount<TAccountSession>
         : TAccountSession,
       TAccountTargetWord extends string
         ? ReadonlyAccount<TAccountTargetWord>
         : TAccountTargetWord,
+      TAccountUserProfile extends string
+        ? ReadonlyAccount<TAccountUserProfile>
+        : TAccountUserProfile,
       TAccountEventAuthority extends string
         ? ReadonlyAccount<TAccountEventAuthority>
         : TAccountEventAuthority,
@@ -109,29 +121,38 @@ export function getSubmitGuessInstructionDataCodec(): Codec<
 }
 
 export type SubmitGuessAsyncInput<
+  TAccountPayer extends string = string,
   TAccountSession extends string = string,
   TAccountTargetWord extends string = string,
+  TAccountUserProfile extends string = string,
   TAccountEventAuthority extends string = string,
   TAccountProgram extends string = string,
 > = {
+  payer: TransactionSigner<TAccountPayer>;
   session: Address<TAccountSession>;
   /** The target word account (private, but readable by TEE for evaluation) */
   targetWord: Address<TAccountTargetWord>;
+  /** User profile — verified for authorized session key */
+  userProfile: Address<TAccountUserProfile>;
   eventAuthority?: Address<TAccountEventAuthority>;
   program: Address<TAccountProgram>;
   guess: SubmitGuessInstructionDataArgs["guess"];
 };
 
 export async function getSubmitGuessInstructionAsync<
+  TAccountPayer extends string,
   TAccountSession extends string,
   TAccountTargetWord extends string,
+  TAccountUserProfile extends string,
   TAccountEventAuthority extends string,
   TAccountProgram extends string,
   TProgramAddress extends Address = typeof VOBLE_PROGRAM_ADDRESS,
 >(
   input: SubmitGuessAsyncInput<
+    TAccountPayer,
     TAccountSession,
     TAccountTargetWord,
+    TAccountUserProfile,
     TAccountEventAuthority,
     TAccountProgram
   >,
@@ -139,8 +160,10 @@ export async function getSubmitGuessInstructionAsync<
 ): Promise<
   SubmitGuessInstruction<
     TProgramAddress,
+    TAccountPayer,
     TAccountSession,
     TAccountTargetWord,
+    TAccountUserProfile,
     TAccountEventAuthority,
     TAccountProgram
   >
@@ -150,8 +173,10 @@ export async function getSubmitGuessInstructionAsync<
 
   // Original accounts.
   const originalAccounts = {
+    payer: { value: input.payer ?? null, isWritable: true },
     session: { value: input.session ?? null, isWritable: true },
     targetWord: { value: input.targetWord ?? null, isWritable: false },
+    userProfile: { value: input.userProfile ?? null, isWritable: false },
     eventAuthority: { value: input.eventAuthority ?? null, isWritable: false },
     program: { value: input.program ?? null, isWritable: false },
   };
@@ -181,8 +206,10 @@ export async function getSubmitGuessInstructionAsync<
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
+      getAccountMeta(accounts.payer),
       getAccountMeta(accounts.session),
       getAccountMeta(accounts.targetWord),
+      getAccountMeta(accounts.userProfile),
       getAccountMeta(accounts.eventAuthority),
       getAccountMeta(accounts.program),
     ],
@@ -192,45 +219,58 @@ export async function getSubmitGuessInstructionAsync<
     programAddress,
   } as SubmitGuessInstruction<
     TProgramAddress,
+    TAccountPayer,
     TAccountSession,
     TAccountTargetWord,
+    TAccountUserProfile,
     TAccountEventAuthority,
     TAccountProgram
   >);
 }
 
 export type SubmitGuessInput<
+  TAccountPayer extends string = string,
   TAccountSession extends string = string,
   TAccountTargetWord extends string = string,
+  TAccountUserProfile extends string = string,
   TAccountEventAuthority extends string = string,
   TAccountProgram extends string = string,
 > = {
+  payer: TransactionSigner<TAccountPayer>;
   session: Address<TAccountSession>;
   /** The target word account (private, but readable by TEE for evaluation) */
   targetWord: Address<TAccountTargetWord>;
+  /** User profile — verified for authorized session key */
+  userProfile: Address<TAccountUserProfile>;
   eventAuthority: Address<TAccountEventAuthority>;
   program: Address<TAccountProgram>;
   guess: SubmitGuessInstructionDataArgs["guess"];
 };
 
 export function getSubmitGuessInstruction<
+  TAccountPayer extends string,
   TAccountSession extends string,
   TAccountTargetWord extends string,
+  TAccountUserProfile extends string,
   TAccountEventAuthority extends string,
   TAccountProgram extends string,
   TProgramAddress extends Address = typeof VOBLE_PROGRAM_ADDRESS,
 >(
   input: SubmitGuessInput<
+    TAccountPayer,
     TAccountSession,
     TAccountTargetWord,
+    TAccountUserProfile,
     TAccountEventAuthority,
     TAccountProgram
   >,
   config?: { programAddress?: TProgramAddress },
 ): SubmitGuessInstruction<
   TProgramAddress,
+  TAccountPayer,
   TAccountSession,
   TAccountTargetWord,
+  TAccountUserProfile,
   TAccountEventAuthority,
   TAccountProgram
 > {
@@ -239,8 +279,10 @@ export function getSubmitGuessInstruction<
 
   // Original accounts.
   const originalAccounts = {
+    payer: { value: input.payer ?? null, isWritable: true },
     session: { value: input.session ?? null, isWritable: true },
     targetWord: { value: input.targetWord ?? null, isWritable: false },
+    userProfile: { value: input.userProfile ?? null, isWritable: false },
     eventAuthority: { value: input.eventAuthority ?? null, isWritable: false },
     program: { value: input.program ?? null, isWritable: false },
   };
@@ -255,8 +297,10 @@ export function getSubmitGuessInstruction<
   const getAccountMeta = getAccountMetaFactory(programAddress, "programId");
   return Object.freeze({
     accounts: [
+      getAccountMeta(accounts.payer),
       getAccountMeta(accounts.session),
       getAccountMeta(accounts.targetWord),
+      getAccountMeta(accounts.userProfile),
       getAccountMeta(accounts.eventAuthority),
       getAccountMeta(accounts.program),
     ],
@@ -266,8 +310,10 @@ export function getSubmitGuessInstruction<
     programAddress,
   } as SubmitGuessInstruction<
     TProgramAddress,
+    TAccountPayer,
     TAccountSession,
     TAccountTargetWord,
+    TAccountUserProfile,
     TAccountEventAuthority,
     TAccountProgram
   >);
@@ -279,11 +325,14 @@ export type ParsedSubmitGuessInstruction<
 > = {
   programAddress: Address<TProgram>;
   accounts: {
-    session: TAccountMetas[0];
+    payer: TAccountMetas[0];
+    session: TAccountMetas[1];
     /** The target word account (private, but readable by TEE for evaluation) */
-    targetWord: TAccountMetas[1];
-    eventAuthority: TAccountMetas[2];
-    program: TAccountMetas[3];
+    targetWord: TAccountMetas[2];
+    /** User profile — verified for authorized session key */
+    userProfile: TAccountMetas[3];
+    eventAuthority: TAccountMetas[4];
+    program: TAccountMetas[5];
   };
   data: SubmitGuessInstructionData;
 };
@@ -296,7 +345,7 @@ export function parseSubmitGuessInstruction<
     InstructionWithAccounts<TAccountMetas> &
     InstructionWithData<ReadonlyUint8Array>,
 ): ParsedSubmitGuessInstruction<TProgram, TAccountMetas> {
-  if (instruction.accounts.length < 4) {
+  if (instruction.accounts.length < 6) {
     // TODO: Coded error.
     throw new Error("Not enough accounts");
   }
@@ -309,8 +358,10 @@ export function parseSubmitGuessInstruction<
   return {
     programAddress: instruction.programAddress,
     accounts: {
+      payer: getNextAccount(),
       session: getNextAccount(),
       targetWord: getNextAccount(),
+      userProfile: getNextAccount(),
       eventAuthority: getNextAccount(),
       program: getNextAccount(),
     },
